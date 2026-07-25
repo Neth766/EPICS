@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPICS | Medicinal Plant Knowledge Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient-bg" id="animatedBackground" aria-hidden="true">
+    <canvas id="livingForestCanvas"></canvas>
+  </div>
+  <div class="splash" id="splash">
+    <div class="splash-mark">V</div>
+    <p>EPICS</p>
+    <span>Community medicinal plant knowledge and conservation</span>
+    <div class="sprout-loader" aria-label="Loading"></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="EPICS home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="brandGradient" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#2f9c68"/>
+              <stop offset="1" stop-color="#d6a94f"/>
+            </linearGradient>
+          </defs>
+          <circle cx="24" cy="24" r="22" fill="url(#brandGradient)"/>
+          <path d="M24 13.5c-4.8 5.5-6 10.8-3 14.1 3 3.3 7.7 2.7 12.2-1.2 1.2-1.1 1.9-2.5 2-4.1.3-3.3-1.1-6.9-4.7-8.8-1.2-.7-2.4-1-3.5-1-1.2 0-2.4.4-3.5 1.1Z" fill="rgba(255,255,255,0.92)"/>
+          <path d="M20.5 31.8c7.4-1.7 11-8.5 10-11.9-2.8 1.8-5.6 4.1-9.3 4.1s-6.4-1.5-6.4-1.5c-1.6 4.2-.2 6.4 1.7 9.3Z" fill="rgba(255,255,255,0.82)"/>
+        </svg>
+      </span>
+      <span>
+        <strong>EPICS</strong>
+        <small>Medicinal Plant Atlas</small>
+      </span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="#explore">Explore</a>
+      <a href="#symptoms">Symptoms</a>
+      <a href="#garden">Garden</a>
+      <a href="#learn">Learn</a>
+    </nav>
+    <div class="top-actions">
+      <select id="languageSelect" aria-label="Choose language">
+        <option>English</option>
+        <option>Hindi</option>
+        <option>Tamil</option>
+        <option>Telugu</option>
+        <option>Kannada</option>
+      </select>
+      <button class="icon-button" id="themeToggle" aria-label="Toggle dark mode">☾</button>
+      <button class="icon-button notification-button" id="notifyButton" aria-label="Notifications">
+        <span class="notification-dot"></span>
+        ⟐
+      </button>
+      <a class="admin-access" href="#admin" aria-label="Admin dashboard">
+        <span class="admin-orbit"></span>
+        <span class="admin-shield">◆</span>
+        <span>Admin</span>
+      </a>
+      <button class="ghost-button" data-open-modal="loginModal">Sign in</button>
+      <button class="primary-button" data-open-modal="signupModal">Create account</button>
+    </div>
+    <button class="menu-button" id="menuButton" aria-label="Open menu">☰</button>
+  </header>
+
+  <aside class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+    <a href="#explore">Explore plants</a>
+    <a href="#symptoms">Symptom explorer</a>
+    <a href="#garden">Interactive garden</a>
+    <a href="#community">Contribute</a>
+    <a href="#learn">Learning center</a>
+    <a class="mobile-admin-link" href="#admin">◆ Staff admin dashboard</a>
+  </aside>
+
+  <main>
+    <section class="hero page active" id="home" data-page="home">
+      <div class="hero-copy reveal">
+        <span class="eyebrow">Community knowledge • Conservation first</span>
+        <span class="hero-badge">New • immersive plant discovery flow</span>
+        <h1>Community Medicinal Plant Knowledge & Conservation Platform</h1>
+        <p>Search plants by symptom, common name, scientific name, local language, family, region, and traditional use while helping communities protect living medicinal gardens.</p>
+        <div class="hero-insights" aria-label="EPICS highlights">
+          <span>AI-ready search design</span>
+          <span>QR garden profiles</span>
+          <span>Admin verification flow</span>
+        </div>
+        <div class="hero-actions">
+          <a class="primary-button large" href="#explore">Get started</a>
+          <button class="secondary-button large" data-open-modal="contributionModal">Submit observation</button>
+        </div>
+      </div>
+      <div class="hero-panel reveal delay-1" aria-label="Plant search preview">
+        <div class="search-shell">
+          <label for="globalSearch">Plant search</label>
+          <div class="search-row">
+            <span>⌕</span>
+            <input id="globalSearch" type="search" placeholder="Try tulsi, cough, Ocimum tenuiflorum...">
+          </div>
+          <div class="smart-assist" id="smartAssist">Smart suggestions will appear as you search.</div>
+          <div class="quick-filters">
+            <button>Respiratory</button>
+            <button>Digestive</button>
+            <button>Skin care</button>
+            <button>Immunity</button>
+          </div>
+        </div>
+        <div class="featured-card">
+          <img src="https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?auto=format&fit=crop&w=900&q=80" alt="Tulsi plant leaves">
+          <div>
+            <span class="badge">Featured</span>
+            <h2>Tulsi</h2>
+            <p>Ocimum tenuiflorum • Lamiaceae</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="metric-strip reveal page active" data-page="home" aria-label="Platform highlights">
+      <article><strong>1,248</strong><span>Plant profiles</span></article>
+      <article><strong>18</strong><span>Indian languages ready</span></article>
+      <article><strong>427</strong><span>Community observations</span></article>
+      <article><strong>96%</strong><span>Verified references</span></article>
+    </section>
+
+    <section class="journey-strip reveal page active" data-page="home" aria-label="User journey">
+      <article><span>01</span><strong>Search</strong><p>Find by symptom, local name, scientific name, family, or region.</p></article>
+      <article><span>02</span><strong>Learn</strong><p>Open visual slides with photos, preparation examples, and care notes.</p></article>
+      <article><span>03</span><strong>Conserve</strong><p>Submit observations, garden markers, and verified QR-linked records.</p></article>
+    </section>
+
+    <section class="app-grid page" id="explore" data-page="explore">
+      <aside class="filter-panel reveal">
+        <div class="section-kicker">Plant Search</div>
+        <h2>Find by name, symptom, family, or region</h2>
+        <label>Search type
+          <select id="searchType">
+            <option>All fields</option>
+            <option>Plant name</option>
+            <option>Scientific name</option>
+            <option>Local name</option>
+            <option>Symptom</option>
+          </select>
+        </label>
+        <label>Plant family
+          <select>
+            <option>Any family</option>
+            <option>Lamiaceae</option>
+            <option>Zingiberaceae</option>
+            <option>Fabaceae</option>
+            <option>Asphodelaceae</option>
+          </select>
+        </label>
+        <label>Region
+          <select>
+            <option>All regions</option>
+            <option>Western Ghats</option>
+            <option>Himalayan foothills</option>
+            <option>Deccan Plateau</option>
+            <option>Coastal India</option>
+          </select>
+        </label>
+        <label>Sort by
+          <select id="sortSelect">
+            <option>Most viewed</option>
+            <option>A to Z</option>
+            <option>Recently added</option>
+            <option>Most saved</option>
+          </select>
+        </label>
+        <div class="toggle-row">
+          <span>View</span>
+          <button class="segmented active" data-view="grid">Grid</button>
+          <button class="segmented" data-view="list">List</button>
+        </div>
+        <div class="source-panel">
+          <strong>Backend-ready</strong>
+          <p>Plant images, QR records, references, languages, and review status can plug into API data later.</p>
+        </div>
+      </aside>
+
+      <section class="content-panel reveal delay-1">
+        <div class="panel-header">
+          <div>
+            <div class="section-kicker">Search Results</div>
+            <h2>Traditionally used plants</h2>
+          </div>
+          <div class="panel-actions">
+            <button class="secondary-button" id="compareButton">Compare saved</button>
+            <button class="secondary-button" id="quickViewButton">Quick view</button>
+          </div>
+        </div>
+        <div class="plant-grid" id="plantGrid"></div>
+      </section>
+    </section>
+
+    <section class="detail-section reveal page" id="plant-detail" data-page="explore">
+      <div class="plant-detail-card">
+        <div class="gallery">
+          <img class="main-plant-image" src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=80" alt="Medicinal plant close up">
+          <div class="thumbs">
+            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=240&q=80" alt="">
+            <img src="https://images.unsplash.com/photo-1615485925600-97237c4fc1ec?auto=format&fit=crop&w=240&q=80" alt="">
+            <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=240&q=80" alt="">
+          </div>
+        </div>
+        <div class="detail-copy">
+          <span class="badge">Plant profile</span>
+          <h2>Turmeric</h2>
+          <p class="latin">Curcuma longa • Zingiberaceae</p>
+          <p>A verified profile with local names, traditional preparation notes, growing conditions, community observations, QR code support, and care notes.</p>
+          <div class="info-grid">
+            <span><strong>Parts used</strong> Rhizome</span>
+            <span><strong>Category</strong> Skin, wellness</span>
+            <span><strong>Climate</strong> Warm, humid</span>
+            <span><strong>QR</strong> Ready</span>
+          </div>
+          <div class="care-note">Profiles can include source links, local context, preparation notes, and expert-reviewed care guidance.</div>
+          <div class="detail-actions">
+            <button class="primary-button">Download PDF</button>
+            <button class="secondary-button">Bookmark</button>
+            <button class="secondary-button">Share</button>
+            <button class="secondary-button" id="qrButton">Show QR</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="category-band reveal page" id="categories" data-page="explore">
+      <div class="panel-header">
+        <div>
+          <div class="section-kicker">Categories</div>
+          <h2>Browse educational groupings</h2>
+        </div>
+      </div>
+      <div class="category-grid">
+        <article><span>◌</span><strong>Respiratory</strong><p>Traditionally referenced plants for breathing and seasonal comfort.</p></article>
+        <article><span>◍</span><strong>Digestive</strong><p>Herbs commonly discussed for digestion and appetite support.</p></article>
+        <article><span>◎</span><strong>Skin</strong><p>External preparation knowledge with clear plant-part documentation.</p></article>
+        <article><span>✦</span><strong>Immunity</strong><p>Community knowledge around general wellness rituals.</p></article>
+        <article><span>◇</span><strong>Women's Health</strong><p>Carefully labeled traditional references with disclaimers.</p></article>
+        <article><span>☘</span><strong>General Wellness</strong><p>Everyday plants, preparation, and conservation notes.</p></article>
+      </div>
+    </section>
+
+    <section class="symptom-section reveal page" id="symptoms" data-page="symptoms">
+      <div class="section-kicker">Symptom Explorer</div>
+      <h2>Select symptoms to explore traditional plant references</h2>
+      <div class="symptom-search-card">
+        <label for="symptomSearch">Type a symptom
+          <input id="symptomSearch" type="search" placeholder="Example: cough, cold, indigestion, skin irritation">
+        </label>
+        <button class="primary-button" id="symptomSearchButton">Explore</button>
+      </div>
+      <div class="chip-cloud" id="symptomChips">
+        <button data-symptom="cough">Cough</button>
+        <button data-symptom="indigestion">Indigestion</button>
+        <button data-symptom="skin irritation">Skin irritation</button>
+        <button data-symptom="fatigue">Fatigue</button>
+        <button data-symptom="cold">Cold</button>
+      </div>
+      <div class="recommendation" id="symptomResult">Choose one or more symptoms to see educational plant matches.</div>
+      <div class="presentation-shell">
+        <div class="presentation-toolbar">
+          <div>
+            <h3 id="deckTitle">Plant presentation deck</h3>
+          </div>
+          <div class="deck-controls">
+            <button class="secondary-button" id="prevSlide">Previous</button>
+            <span id="slideCounter">1 / 5</span>
+            <button class="primary-button" id="nextSlide">Next</button>
+          </div>
+        </div>
+        <div class="symptom-deck" id="symptomDeck" aria-label="Symptom educational presentation"></div>
+        <div class="slide-dots" id="slideDots" aria-label="Slide navigation"></div>
+      </div>
+    </section>
+
+    <section class="split-section page" id="garden" data-page="garden">
+      <div class="garden-map reveal">
+        <button class="marker marker-a" aria-label="Tulsi garden marker"></button>
+        <button class="marker marker-b" aria-label="Aloe marker"></button>
+        <button class="marker marker-c" aria-label="Neem marker"></button>
+      </div>
+      <div class="reveal delay-1">
+        <div class="section-kicker">Interactive Garden</div>
+        <h2>Future-ready medicinal garden map with QR markers</h2>
+        <p>Search plants inside a campus or community garden, open QR-linked profiles, view conservation status, and plan guided learning walks.</p>
+        <div class="garden-tools">
+          <select>
+            <option>VIT herbal garden</option>
+            <option>Community nursery</option>
+            <option>School biodiversity patch</option>
+          </select>
+          <button class="primary-button">Open garden</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="dashboard-grid page" id="community" data-page="community">
+      <article class="dashboard-card reveal">
+        <div class="section-kicker">Community</div>
+        <h2>Contributions</h2>
+        <p>Submit observations, upload photos, suggest edits, and follow review status.</p>
+        <button class="primary-button" data-open-modal="contributionModal">Add observation</button>
+      </article>
+      <article class="dashboard-card reveal delay-1">
+        <div class="section-kicker">Favorites</div>
+        <h2>Collections & notes</h2>
+        <p>Save plant profiles into collections for coursework, garden walks, or conservation tasks.</p>
+        <div class="empty-state">No saved collections yet</div>
+      </article>
+      <article class="dashboard-card reveal delay-2" id="learn">
+        <div class="section-kicker">Learning Center</div>
+        <h2>Courses, quizzes, certificates</h2>
+        <div class="course-progress"><span style="width:68%"></span></div>
+        <p>Medicinal plant basics • 68% complete</p>
+      </article>
+      <article class="dashboard-card reveal delay-2">
+        <div class="section-kicker">Accessibility</div>
+        <h2>Readable for everyone</h2>
+        <p>Adjust text comfort, motion, and contrast for safer classroom and field use.</p>
+        <div class="accessibility-tools">
+          <button class="secondary-button" id="textSizeButton">Larger text</button>
+          <button class="secondary-button" id="motionButton">Reduce motion</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="analytics reveal page" id="admin" data-page="admin">
+      <div class="panel-header">
+        <div>
+          <div class="section-kicker">Admin & Analytics</div>
+          <h2>Manage plants, users, approvals, and system health</h2>
+        </div>
+        <select>
+          <option>Last 30 days</option>
+          <option>Last quarter</option>
+          <option>This year</option>
+        </select>
+      </div>
+      <div class="analytics-grid">
+        <article><strong>82k</strong><span>Plant views</span><div class="bar-chart"><i></i><i></i><i></i><i></i></div></article>
+        <article><strong>3,420</strong><span>Searches</span><div class="line-chart"></div></article>
+        <article><strong>136</strong><span>Pending submissions</span><button class="secondary-button">Review queue</button></article>
+        <article><strong>99.9%</strong><span>System health</span><div class="status-dot"></div></article>
+      </div>
+      <div class="database-map">
+        <article><span>Plants</span><strong>Images • Categories • Symptoms</strong></article>
+        <article><span>Users</span><strong>Roles • Favorites • Contributions</strong></article>
+        <article><span>Learning</span><strong>Presentations • Slides • Languages</strong></article>
+        <article><span>Ops</span><strong>Analytics • Notifications • Audit logs</strong></article>
+      </div>
+    </section>
+
+    <section class="support-grid reveal page" id="about" data-page="about">
+      <article>
+        <div class="section-kicker">About</div>
+        <h2>Built for learning, conservation, and public trust</h2>
+        <p>Mission, vision, EPICS alignment, government references, team, contact, privacy, and terms are structured for future database integration.</p>
+      </article>
+      <article>
+        <div class="section-kicker">Help Center</div>
+        <h2>FAQ, tutorials, support, feedback</h2>
+        <p>Beautiful empty states, loading skeletons, notifications, and 404 experiences are included in the design system.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <strong>EPICS</strong>
+      <p>Educational medicinal plant knowledge platform for communities.</p>
+    </div>
+    <nav>
+      <a href="#about">Government references</a>
+      <a href="#about">Privacy Policy</a>
+      <a href="#about">Terms</a>
+      <a href="#about">Contact</a>
+    </nav>
+  </footer>
+
+  <dialog class="modal" id="loginModal">
+    <form method="dialog">
+      <button class="close" aria-label="Close">×</button>
+      <h2>Sign in</h2>
+      <label>Email<input type="email" placeholder="you@example.com"></label>
+      <label>Password<input type="password" placeholder="••••••••"></label>
+      <div class="form-row"><label class="check"><input type="checkbox"> Remember me</label><a href="#" data-open-modal="forgotModal">Forgot password?</a></div>
+      <button class="primary-button full">Sign in</button>
+      <button class="secondary-button full" type="button">Continue with Google</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="signupModal">
+    <form method="dialog">
+      <button class="close" aria-label="Close">×</button>
+      <h2>Create account</h2>
+      <label>Name<input type="text" placeholder="Full name"></label>
+      <label>Email<input type="email" placeholder="you@example.com"></label>
+      <label>Password<input type="password" placeholder="Create password"></label>
+      <label>Role<select><option>Student</option><option>Researcher</option><option>Community contributor</option><option>Admin</option></select></label>
+      <label>Language<select><option>English</option><option>Hindi</option><option>Tamil</option></select></label>
+      <label class="check"><input type="checkbox"> I agree to the Terms and Privacy Policy</label>
+      <button class="primary-button full">Create account</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="forgotModal">
+    <form method="dialog">
+      <button class="close" aria-label="Close">×</button>
+      <h2>Reset password</h2>
+      <label>Email<input type="email" placeholder="you@example.com"></label>
+      <label>OTP<input type="text" placeholder="6 digit code"></label>
+      <label>New password<input type="password" placeholder="New password"></label>
+      <button class="primary-button full">Confirm reset</button>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="contributionModal">
+    <form method="dialog">
+      <button class="close" aria-label="Close">×</button>
+      <h2>Submit observation</h2>
+      <label>Plant name<input type="text" placeholder="Common or local name"></label>
+      <label>Location<input type="text" placeholder="Garden, village, or region"></label>
+      <label>Observation type<select><option>New plant</option><option>Suggest edit</option><option>Conservation note</option><option>Image upload</option></select></label>
+      <label>Notes<textarea placeholder="Describe what you observed"></textarea></label>
+      <button class="primary-button full">Submit for review</button>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast">Saved to favourites</div>
+  <div class="floating-actions" aria-label="Quick actions">
+    <button id="scrollTopButton" aria-label="Back to top">↑</button>
+    <button data-open-modal="contributionModal" aria-label="Add observation">＋</button>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
