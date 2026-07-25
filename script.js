@@ -579,7 +579,8 @@ function showPage(pageName = "home") {
 }
 
 function renderSymptomDeck(symptom = "cough") {
-  const guide = symptomGuides.cough;
+  const guide = symptomGuides[symptom] || symptomGuides.cough;
+  if (!guide) return;
   deckTitle.textContent = guide.title;
   document.querySelector("#symptomResult").textContent = guide.intro;
   currentSlides = [...guide.slides];
@@ -780,17 +781,20 @@ document.querySelectorAll("#mobileMenu a").forEach((link) => {
 });
 
 const selectedSymptoms = new Set();
-document.querySelector("#symptomChips").addEventListener("click", (event) => {
-  if (!event.target.matches("button")) return;
-  const symptom = event.target.dataset.symptom;
-  event.target.classList.toggle("active");
-  selectedSymptoms.has(symptom) ? selectedSymptoms.delete(symptom) : selectedSymptoms.add(symptom);
-  const list = [...selectedSymptoms];
-  document.querySelector("#symptomResult").textContent = list.length
-    ? `Current sample matches: Aloe Vera and Neem. Open the slide deck for plant photos, profile details, visual cards, and references.`
-    : "Choose one or more symptoms to see educational plant matches.";
-  if (list.length) renderSymptomDeck(list[0]);
-});
+const symptomChips = document.querySelector("#symptomChips");
+if (symptomChips) {
+  symptomChips.addEventListener("click", (event) => {
+    if (!event.target.matches("button")) return;
+    const symptom = event.target.dataset.symptom;
+    event.target.classList.toggle("active");
+    selectedSymptoms.has(symptom) ? selectedSymptoms.delete(symptom) : selectedSymptoms.add(symptom);
+    const list = [...selectedSymptoms];
+    document.querySelector("#symptomResult").textContent = list.length
+      ? `Current sample matches: Aloe Vera and Neem. Open the slide deck for plant photos, profile details, visual cards, and references.`
+      : "Choose one or more symptoms to see educational plant matches.";
+    if (list.length) renderSymptomDeck(list[0]);
+  });
+}
 
 document.querySelector("#symptomSearchButton").addEventListener("click", () => {
   const term = symptomSearch.value.toLowerCase().trim();

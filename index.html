@@ -47,13 +47,6 @@
       <a href="#learn">Learn</a>
     </nav>
     <div class="top-actions">
-      <select id="languageSelect" aria-label="Choose language">
-        <option>English</option>
-        <option>Hindi</option>
-        <option>Tamil</option>
-        <option>Telugu</option>
-        <option>Kannada</option>
-      </select>
       <button class="icon-button" id="themeToggle" aria-label="Toggle dark mode">☾</button>
       <button class="icon-button notification-button" id="notifyButton" aria-label="Notifications">
         <span class="notification-dot"></span>
@@ -66,6 +59,13 @@
       </a>
       <button class="ghost-button" data-open-modal="loginModal">Sign in</button>
       <button class="primary-button" data-open-modal="signupModal">Create account</button>
+      <select id="languageSelect" aria-label="Choose language">
+        <option>English</option>
+        <option>Hindi</option>
+        <option>Tamil</option>
+        <option>Telugu</option>
+        <option>Kannada</option>
+      </select>
     </div>
     <button class="menu-button" id="menuButton" aria-label="Open menu">☰</button>
   </header>
@@ -87,7 +87,7 @@
         <h1>Community Medicinal Plant Knowledge & Conservation Platform</h1>
         <p>Search plants by symptom, common name, scientific name, local language, family, region, and traditional use while helping communities protect living medicinal gardens.</p>
         <div class="hero-insights" aria-label="EPICS highlights">
-          <span>AI-ready search design</span>
+          <span>AI-ready search design</span>]
           <span>QR garden profiles</span>
           <span>Admin verification flow</span>
         </div>
@@ -254,16 +254,44 @@
       <h2>Select symptoms to explore traditional plant references</h2>
       <div class="symptom-search-card">
         <label for="symptomSearch">Type a symptom
-          <input id="symptomSearch" type="search" placeholder="Example: cough, cold, indigestion, skin irritation">
+          <input id="symptomSearch" type="search">
         </label>
         <button class="primary-button" id="symptomSearchButton">Explore</button>
       </div>
-      <div class="chip-cloud" id="symptomChips">
-        <button data-symptom="cough">Cough</button>
-        <button data-symptom="indigestion">Indigestion</button>
-        <button data-symptom="skin irritation">Skin irritation</button>
-        <button data-symptom="fatigue">Fatigue</button>
-        <button data-symptom="cold">Cold</button>
+      <div class="symptom-layout">
+        <aside class="symptom-filters">
+          <div class="panel-heading">Patient details</div>
+          <label for="ageRange">Age: <span id="ageValue">28</span></label>
+          <input id="ageRange" type="range" min="1" max="100" value="28" oninput="document.getElementById('ageValue').textContent = this.value">
+          <div class="form-row">
+            <label><input type="radio" name="sex" value="female" checked> Female</label>
+            <label><input type="radio" name="sex" value="male"> Male</label>
+            <label><input type="radio" name="sex" value="other"> Other</label>
+          </div>
+          <div class="symptom-feature-list">
+            <label><input type="checkbox"> Fever</label>
+            <label><input type="checkbox"> Body ache</label>
+            <label><input type="checkbox"> Headache</label>
+            <label><input type="checkbox"> Sore throat</label>
+            <label><input type="checkbox"> Shortness of breath</label>
+            <label><input type="checkbox"> Nausea</label>
+          </div>
+          <div class="panel-note">Use the checkboxes to narrow the symptom search and include demographic details for better guidance.</div>
+        </aside>
+        <aside class="symptom-conditions">
+          <div class="panel-heading">Common conditions</div>
+          <div class="condition-list">
+            <label><input type="checkbox"> Cold</label>
+            <label><input type="checkbox"> Flu</label>
+            <label><input type="checkbox"> Cough</label>
+            <label><input type="checkbox"> Headache</label>
+            <label><input type="checkbox"> Indigestion</label>
+            <label><input type="checkbox"> Skin irritation</label>
+            <label><input type="checkbox"> Allergy</label>
+            <label><input type="checkbox"> Fatigue</label>
+          </div>
+          <div class="panel-note">Tap a condition to quickly explore plant references related to that issue.</div>
+        </aside>
       </div>
       <div class="recommendation" id="symptomResult">Choose one or more symptoms to see educational plant matches.</div>
       <div class="presentation-shell">
