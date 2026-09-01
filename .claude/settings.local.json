@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:vitalflora.pages.dev)",
+      "WebFetch(domain:github.com)",
+      "mcp__scheduled-tasks__list_scheduled_tasks"
+    ]
+  }
+}

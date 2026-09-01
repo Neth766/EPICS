@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EPICS — Community Medicinal Plant Knowledge & Conservation Platform">
   <title>EPICS | Medicinal Plant Knowledge Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="assets/plants/Tulsi/tulsi_page.jpg">
+  <link rel="preload" as="image" href="assets/logo/vital-flora-logo.svg">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -21,6 +24,243 @@
   </div>
 
   <header class="topbar">
+    <div class="topbar-canopy" aria-hidden="true">
+      <svg class="canopy-svg canopy-layer" viewBox="0 0 1440 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Layer 0: deep forest background - many tree trunks -->
+        <g opacity="0.45">
+          <path d="M-10,130 C-8,70 12,25 35,0 L55,0 C38,28 8,75 8,130Z" fill="#1a0e05"/>
+          <path d="M100,130 C98,75 115,30 135,0 L150,0 C138,25 118,70 120,130Z" fill="#1a0e05"/>
+          <path d="M280,130 C278,80 295,35 310,0 L325,0 C315,30 298,75 300,130Z" fill="#1a0e05"/>
+          <path d="M420,130 C422,70 435,25 450,0 L465,0 C455,28 440,72 438,130Z" fill="#1a0e05"/>
+          <path d="M580,130 C578,80 595,30 610,0 L625,0 C615,28 598,72 600,130Z" fill="#1a0e05"/>
+          <path d="M720,130 C722,65 738,20 755,0 L770,0 C758,25 742,70 740,130Z" fill="#1a0e05"/>
+          <path d="M860,130 C858,75 875,30 890,0 L905,0 C895,28 878,72 880,130Z" fill="#1a0e05"/>
+          <path d="M1020,130 C1022,70 1035,25 1050,0 L1065,0 C1055,28 1040,72 1038,130Z" fill="#1a0e05"/>
+          <path d="M1180,130 C1178,80 1195,30 1210,0 L1225,0 C1215,28 1198,72 1200,130Z" fill="#1a0e05"/>
+          <path d="M1330,130 C1332,70 1345,25 1360,0 L1375,0 C1365,28 1350,72 1348,130Z" fill="#1a0e05"/>
+          <path d="M1440,130 C1438,70 1428,25 1415,0 L1400,0 C1410,28 1422,72 1424,130Z" fill="#1a0e05"/>
+        </g>
+
+        <!-- Layer 1: mid forest - branches with autumn leaves -->
+        <g opacity="0.7">
+          <!-- Left tree crown -->
+          <ellipse cx="80" cy="35" rx="130" ry="55" fill="#8b4513" opacity="0.35"/>
+          <ellipse cx="60" cy="28" rx="100" ry="42" fill="#a0522d" opacity="0.3"/>
+          <ellipse cx="110" cy="40" rx="90" ry="38" fill="#6b3410" opacity="0.25"/>
+
+          <!-- Drooping left branch with autumn leaves -->
+          <path d="M30,20 C50,22 70,18 90,25 C85,35 75,40 60,38 C45,42 30,35 25,28Z" fill="#c45c26" opacity="0.85"/>
+          <path d="M50,15 C65,18 80,14 95,20 C90,28 80,32 65,30 C55,34 42,30 40,24Z" fill="#d4862b" opacity="0.8"/>
+          <path d="M70,22 C85,25 100,22 110,28 C108,36 95,38 80,35 C70,38 60,34 58,28Z" fill="#b84e1e" opacity="0.75"/>
+          <path d="M40,30 C55,32 70,28 80,34 C78,42 65,44 50,40 C38,42 30,38 28,32Z" fill="#e0a030" opacity="0.7"/>
+
+          <!-- Hanging branch left -->
+          <path d="M40,25 C42,38 40,52 35,62 C33,68 28,72 22,68" stroke="#3d1e08" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M40,25 C44,40 46,55 42,65 C40,72 35,76 30,72" stroke="#4a2510" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- Leaves on hanging branch -->
+          <path d="M22,68 C18,62 14,64 16,72 C18,78 24,78 22,74Z" fill="#d4862b" opacity="0.85"/>
+          <path d="M30,72 C26,66 22,68 24,76 C26,82 32,82 30,78Z" fill="#c45c26" opacity="0.8"/>
+          <path d="M35,62 C31,56 27,58 29,66 C31,72 37,72 35,68Z" fill="#e0a030" opacity="0.75"/>
+          <path d="M42,65 C38,60 34,62 36,70 C38,76 44,76 42,72Z" fill="#b84e1e" opacity="0.8"/>
+
+          <!-- Tree 2 - center left -->
+          <ellipse cx="350" cy="30" rx="120" ry="50" fill="#8b4513" opacity="0.3"/>
+          <ellipse cx="370" cy="22" rx="100" ry="40" fill="#a0522d" opacity="0.28"/>
+          <path d="M320,18 C340,20 360,16 380,22 C375,30 365,34 350,32 C335,36 320,30 318,24Z" fill="#c45c26" opacity="0.7"/>
+          <path d="M340,14 C355,17 370,13 385,19 C380,27 370,30 355,28 C345,31 332,28 330,22Z" fill="#d4862b" opacity="0.65"/>
+          <!-- Hanging branch center-left -->
+          <path d="M350,20 C352,35 348,48 342,58 C338,64 332,66 326,62" stroke="#3d1e08" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M350,20 C355,36 358,50 352,60 C348,66 342,68 338,64" stroke="#4a2510" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M326,62 C322,56 318,58 320,66 C322,72 328,72 326,68Z" fill="#e0a030" opacity="0.8"/>
+          <path d="M338,64 C334,58 330,60 332,68 C334,74 340,74 338,70Z" fill="#c45c26" opacity="0.75"/>
+          <path d="M352,60 C348,54 344,56 346,64 C348,70 354,70 352,66Z" fill="#b84e1e" opacity="0.7"/>
+
+          <!-- Tree 3 - center -->
+          <ellipse cx="720" cy="28" rx="140" ry="52" fill="#8b4513" opacity="0.3"/>
+          <ellipse cx="700" cy="20" rx="110" ry="42" fill="#a0522d" opacity="0.28"/>
+          <ellipse cx="750" cy="35" rx="100" ry="38" fill="#6b3410" opacity="0.22"/>
+          <path d="M680,16 C700,18 720,14 740,20 C735,28 725,32 710,30 C695,34 680,28 678,22Z" fill="#d4862b" opacity="0.7"/>
+          <path d="M700,12 C715,15 730,11 745,17 C740,25 730,28 715,26 C705,29 692,26 690,20Z" fill="#c45c26" opacity="0.65"/>
+          <path d="M660,24 C675,26 690,22 700,28 C698,36 685,38 670,34 C658,36 650,32 648,26Z" fill="#e0a030" opacity="0.6"/>
+          <!-- Center hanging branch -->
+          <path d="M700,18 C702,32 698,45 692,55 C688,60 682,62 676,58" stroke="#3d1e08" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <path d="M700,18 C706,34 710,48 704,58 C700,64 694,66 690,62" stroke="#4a2510" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M676,58 C672,52 668,54 670,62 C672,68 678,68 676,64Z" fill="#d4862b" opacity="0.85"/>
+          <path d="M690,62 C686,56 682,58 684,66 C686,72 692,72 690,68Z" fill="#e0a030" opacity="0.8"/>
+          <path d="M704,58 C700,52 696,54 698,62 C700,68 706,68 704,64Z" fill="#c45c26" opacity="0.75"/>
+          <!-- Fruits on center branch -->
+          <circle cx="674" cy="66" r="4" fill="#8b2500" opacity="0.9"/>
+          <circle cx="682" cy="60" r="3.5" fill="#a03020" opacity="0.85"/>
+          <circle cx="688" cy="70" r="4.5" fill="#7a1f00" opacity="0.9"/>
+          <circle cx="696" cy="64" r="3.8" fill="#9a2a18" opacity="0.85"/>
+          <circle cx="702" cy="72" r="4.2" fill="#8b2500" opacity="0.9"/>
+
+          <!-- Tree 4 - center right -->
+          <ellipse cx="1100" cy="32" rx="125" ry="48" fill="#8b4513" opacity="0.3"/>
+          <ellipse cx="1080" cy="24" rx="100" ry="40" fill="#a0522d" opacity="0.28"/>
+          <path d="M1060,16 C1080,18 1100,14 1120,20 C1115,28 1105,32 1090,30 C1075,34 1060,28 1058,22Z" fill="#c45c26" opacity="0.7"/>
+          <path d="M1080,12 C1095,15 1110,11 1125,17 C1120,25 1110,28 1095,26 C1085,29 1072,26 1070,20Z" fill="#d4862b" opacity="0.65"/>
+          <!-- Hanging branch center-right -->
+          <path d="M1080,16 C1082,30 1078,42 1072,52 C1068,58 1062,60 1056,56" stroke="#3d1e08" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M1080,16 C1085,30 1088,44 1082,54 C1078,60 1072,62 1068,58" stroke="#4a2510" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M1056,56 C1052,50 1048,52 1050,60 C1052,66 1058,66 1056,62Z" fill="#e0a030" opacity="0.8"/>
+          <path d="M1068,58 C1064,52 1060,54 1062,62 C1064,68 1070,68 1068,64Z" fill="#c45c26" opacity="0.75"/>
+          <path d="M1082,54 C1078,48 1074,50 1076,58 C1078,64 1084,64 1082,60Z" fill="#b84e1e" opacity="0.7"/>
+
+          <!-- Tree 5 - right -->
+          <ellipse cx="1350" cy="35" rx="110" ry="48" fill="#8b4513" opacity="0.3"/>
+          <ellipse cx="1370" cy="25" rx="90" ry="38" fill="#a0522d" opacity="0.28"/>
+          <path d="M1310,18 C1325,20 1340,16 1355,22 C1350,30 1340,34 1325,32 C1310,36 1295,30 1293,24Z" fill="#d4862b" opacity="0.7"/>
+          <path d="M1330,14 C1345,17 1360,13 1375,19 C1370,27 1360,30 1345,28 C1335,31 1322,28 1320,22Z" fill="#c45c26" opacity="0.65"/>
+          <!-- Hanging branch right -->
+          <path d="M1350,18 C1352,30 1348,42 1342,50 C1338,56 1332,58 1326,54" stroke="#3d1e08" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M1350,18 C1355,32 1358,44 1352,54 C1348,58 1342,60 1338,56" stroke="#4a2510" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M1326,54 C1322,48 1318,50 1320,58 C1322,64 1328,64 1326,60Z" fill="#e0a030" opacity="0.8"/>
+          <path d="M1338,56 C1334,50 1330,52 1332,60 C1334,66 1340,66 1338,62Z" fill="#d4862b" opacity="0.75"/>
+        </g>
+
+        <!-- Layer 2: foreground - detailed autumn leaves & fruits -->
+        <g opacity="0.88">
+          <!-- Left foreground crown -->
+          <ellipse cx="120" cy="42" rx="160" ry="65" fill="#9b4f1a" opacity="0.2"/>
+          <ellipse cx="100" cy="35" rx="130" ry="52" fill="#b85c22" opacity="0.18"/>
+
+          <!-- Detailed left foreground leaves -->
+          <path d="M30,38 C22,30 14,32 16,42 C18,50 28,50 30,46Z" fill="#d4862b"/>
+          <path d="M55,32 C47,24 39,26 41,36 C43,44 53,44 55,40Z" fill="#c45c26"/>
+          <path d="M80,28 C72,20 64,22 66,32 C68,40 78,40 80,36Z" fill="#e0a030"/>
+          <path d="M105,32 C97,24 89,26 91,36 C93,44 103,44 105,40Z" fill="#d4862b"/>
+          <path d="M130,28 C122,20 114,22 116,32 C118,40 128,40 130,36Z" fill="#b84e1e"/>
+          <path d="M155,34 C147,26 139,28 141,38 C143,46 153,46 155,42Z" fill="#c45c26"/>
+          <path d="M45,44 C37,40 30,44 32,52 C34,58 44,58 45,54Z" fill="#e0a030"/>
+          <path d="M75,40 C67,36 60,40 62,48 C64,54 74,54 75,50Z" fill="#d4862b"/>
+          <path d="M110,38 C102,34 95,38 97,46 C99,52 109,52 110,48Z" fill="#c45c26"/>
+          <path d="M140,42 C132,38 125,42 127,50 C129,56 139,56 140,52Z" fill="#b84e1e"/>
+
+          <!-- Fruits left - pomegranate-like -->
+          <circle cx="48" cy="46" r="5" fill="#7a1f00"/>
+          <circle cx="48" cy="46" r="5" fill="url(#fruitShine)" opacity="0.3"/>
+          <circle cx="55" cy="50" r="4.2" fill="#8b2500"/>
+          <circle cx="42" cy="52" r="4.5" fill="#6b1500"/>
+          <circle cx="85" cy="44" r="5.2" fill="#7a1f00"/>
+          <circle cx="90" cy="48" r="3.8" fill="#8b2500"/>
+          <circle cx="120" cy="42" r="4.8" fill="#8b2500"/>
+          <circle cx="125" cy="46" r="3.5" fill="#9a2a18"/>
+          <circle cx="155" cy="48" r="5" fill="#7a1f00"/>
+          <circle cx="160" cy="52" r="4" fill="#8b2500"/>
+          <!-- Small berry clusters -->
+          <circle cx="60" cy="36" r="2.5" fill="#c44e3d" opacity="0.8"/>
+          <circle cx="64" cy="33" r="2" fill="#d4563f" opacity="0.75"/>
+          <circle cx="58" cy="32" r="2.2" fill="#e06050" opacity="0.7"/>
+          <circle cx="100" cy="36" r="2.5" fill="#c44e3d" opacity="0.8"/>
+          <circle cx="104" cy="33" r="2" fill="#d4563f" opacity="0.75"/>
+          <circle cx="140" cy="38" r="2.5" fill="#d4563f" opacity="0.8"/>
+          <circle cx="144" cy="35" r="2.2" fill="#e06050" opacity="0.75"/>
+          <circle cx="137" cy="34" r="2" fill="#c44e3d" opacity="0.7"/>
+
+          <!-- Right foreground crown -->
+          <ellipse cx="1320" cy="42" rx="160" ry="62" fill="#9b4f1a" opacity="0.2"/>
+          <ellipse cx="1340" cy="35" rx="130" ry="50" fill="#b85c22" opacity="0.18"/>
+
+          <!-- Detailed right foreground leaves -->
+          <path d="M1380,38 C1388,30 1396,32 1394,42 C1392,50 1382,50 1380,46Z" fill="#d4862b"/>
+          <path d="M1355,32 C1363,24 1371,26 1369,36 C1367,44 1357,44 1355,40Z" fill="#c45c26"/>
+          <path d="M1330,28 C1338,20 1346,22 1344,32 C1342,40 1332,40 1330,36Z" fill="#e0a030"/>
+          <path d="M1305,32 C1313,24 1321,26 1319,36 C1317,44 1307,44 1305,40Z" fill="#d4862b"/>
+          <path d="M1280,28 C1288,20 1296,22 1294,32 C1292,40 1282,40 1280,36Z" fill="#b84e1e"/>
+          <path d="M1255,34 C1263,26 1271,28 1269,38 C1267,46 1257,46 1255,42Z" fill="#c45c26"/>
+          <path d="M1365,44 C1373,40 1380,44 1378,52 C1376,58 1366,58 1365,54Z" fill="#e0a030"/>
+          <path d="M1335,40 C1343,36 1350,40 1348,48 C1346,54 1336,54 1335,50Z" fill="#d4862b"/>
+          <path d="M1305,38 C1313,34 1320,38 1318,46 C1316,52 1306,52 1305,48Z" fill="#c45c26"/>
+          <path d="M1275,42 C1283,38 1290,42 1288,50 C1286,56 1276,56 1275,52Z" fill="#b84e1e"/>
+
+          <!-- Fruits right - walnut-like -->
+          <circle cx="1362" cy="46" r="4.8" fill="#5c3a1e"/>
+          <circle cx="1368" cy="50" r="4" fill="#6b4528"/>
+          <circle cx="1356" cy="52" r="4.5" fill="#4d2e15"/>
+          <circle cx="1325" cy="44" r="5" fill="#5c3a1e"/>
+          <circle cx="1330" cy="48" r="3.8" fill="#6b4528"/>
+          <circle cx="1295" cy="42" r="4.8" fill="#6b4528"/>
+          <circle cx="1300" cy="46" r="3.5" fill="#4d2e15"/>
+          <circle cx="1260" cy="48" r="5" fill="#5c3a1e"/>
+          <circle cx="1265" cy="52" r="4" fill="#6b4528"/>
+          <!-- Berry clusters right -->
+          <circle cx="1380" cy="36" r="2.5" fill="#a03020" opacity="0.8"/>
+          <circle cx="1384" cy="33" r="2" fill="#b84030" opacity="0.75"/>
+          <circle cx="1376" cy="32" r="2.2" fill="#c44e3d" opacity="0.7"/>
+          <circle cx="1340" cy="36" r="2.5" fill="#a03020" opacity="0.8"/>
+          <circle cx="1344" cy="33" r="2" fill="#b84030" opacity="0.75"/>
+          <circle cx="1300" cy="38" r="2.5" fill="#b84030" opacity="0.8"/>
+          <circle cx="1304" cy="35" r="2.2" fill="#c44e3d" opacity="0.75"/>
+          <circle cx="1297" cy="34" r="2" fill="#a03020" opacity="0.7"/>
+
+          <!-- More hanging branches with fruits across center -->
+          <path d="M500,10 C502,22 498,35 492,44 C488,50 482,52 476,48" stroke="#3d1e08" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M500,10 C505,24 508,36 502,46 C498,52 492,54 488,50" stroke="#4a2510" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M476,48 C472,42 468,44 470,52 C472,58 478,58 476,54Z" fill="#d4862b" opacity="0.85"/>
+          <path d="M488,50 C484,44 480,46 482,54 C484,60 490,60 488,56Z" fill="#e0a030" opacity="0.8"/>
+          <path d="M502,46 C498,40 494,42 496,50 C498,56 504,56 502,52Z" fill="#c45c26" opacity="0.75"/>
+          <circle cx="474" cy="56" r="3.8" fill="#7a1f00"/>
+          <circle cx="482" cy="60" r="3.2" fill="#8b2500"/>
+          <circle cx="490" cy="54" r="4" fill="#6b1500"/>
+          <circle cx="498" cy="62" r="3.5" fill="#8b2500"/>
+          <circle cx="505" cy="57" r="3.8" fill="#7a1f00"/>
+
+          <path d="M900,8 C902,20 898,32 892,42 C888,48 882,50 876,46" stroke="#3d1e08" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M900,8 C905,22 908,34 902,44 C898,50 892,52 888,48" stroke="#4a2510" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <path d="M876,46 C872,40 868,42 870,50 C872,56 878,56 876,52Z" fill="#d4862b" opacity="0.85"/>
+          <path d="M888,48 C884,42 880,44 882,52 C884,58 890,58 888,54Z" fill="#e0a030" opacity="0.8"/>
+          <path d="M902,44 C898,38 894,40 896,48 C898,54 904,54 902,50Z" fill="#c45c26" opacity="0.75"/>
+          <!-- Fruits right-center -->
+          <circle cx="874" cy="54" r="4" fill="#7a1f00"/>
+          <circle cx="882" cy="58" r="3.5" fill="#8b2500"/>
+          <circle cx="890" cy="52" r="4.2" fill="#6b1500"/>
+          <circle cx="898" cy="60" r="3.8" fill="#8b2500"/>
+          <circle cx="905" cy="55" r="4" fill="#7a1f00"/>
+
+          <!-- Additional fern/ground vegetation at base -->
+          <path d="M0,130 C0,110 10,95 20,90 C15,100 8,110 5,118 C2,124 0,128 0,130Z" fill="#5c3a1e" opacity="0.5"/>
+          <path d="M30,130 C30,108 42,92 55,86 C48,96 38,106 34,115 C30,122 28,128 30,130Z" fill="#6b4528" opacity="0.45"/>
+          <path d="M1380,130 C1380,108 1368,92 1355,86 C1362,96 1372,106 1376,115 C1380,122 1382,128 1380,130Z" fill="#5c3a1e" opacity="0.5"/>
+          <path d="M1410,130 C1410,110 1398,95 1385,90 C1392,100 1402,110 1406,118 C1410,124 1412,128 1410,130Z" fill="#6b4528" opacity="0.45"/>
+        </g>
+
+        <!-- Layer 3: small foreground detail leaves -->
+        <g opacity="0.75">
+          <path d="M15,80 C10,72 5,74 7,84 C9,92 16,92 15,88Z" fill="#c45c26"/>
+          <path d="M50,75 C44,68 38,70 40,80 C42,88 50,88 50,84Z" fill="#d4862b"/>
+          <path d="M200,70 C194,62 188,64 190,74 C192,82 200,82 200,78Z" fill="#e0a030"/>
+          <path d="M450,65 C444,58 438,60 440,70 C442,78 450,78 450,74Z" fill="#c45c26"/>
+          <path d="M680,68 C674,60 668,62 670,72 C672,80 680,80 680,76Z" fill="#d4862b"/>
+          <path d="M900,65 C894,58 888,60 890,70 C892,78 900,78 900,74Z" fill="#e0a030"/>
+          <path d="M1150,70 C1144,62 1138,64 1140,74 C1142,82 1150,82 1150,78Z" fill="#c45c26"/>
+          <path d="M1350,72 C1344,64 1338,66 1340,76 C1342,84 1350,84 1350,80Z" fill="#d4862b"/>
+          <path d="M1420,78 C1414,70 1408,72 1410,82 C1412,90 1420,90 1420,86Z" fill="#e0a030"/>
+
+          <!-- More berry clusters in foreground -->
+          <circle cx="25" cy="82" r="3" fill="#a03020" opacity="0.7"/>
+          <circle cx="30" cy="78" r="2.5" fill="#b84030" opacity="0.65"/>
+          <circle cx="22" cy="76" r="2.2" fill="#c44e3d" opacity="0.6"/>
+          <circle cx="205" cy="72" r="3" fill="#a03020" opacity="0.7"/>
+          <circle cx="210" cy="68" r="2.5" fill="#b84030" opacity="0.65"/>
+          <circle cx="685" cy="70" r="3" fill="#a03020" opacity="0.7"/>
+          <circle cx="690" cy="66" r="2.5" fill="#b84030" opacity="0.65"/>
+          <circle cx="1155" cy="72" r="3" fill="#a03020" opacity="0.7"/>
+          <circle cx="1160" cy="68" r="2.5" fill="#b84030" opacity="0.65"/>
+          <circle cx="1355" cy="74" r="3" fill="#a03020" opacity="0.7"/>
+          <circle cx="1360" cy="70" r="2.5" fill="#b84030" opacity="0.65"/>
+        </g>
+
+        <!-- Fruit shine gradient -->
+        <defs>
+          <radialGradient id="fruitShine" cx="35%" cy="35%" r="50%">
+            <stop stop-color="#ffffff" stop-opacity="0.5"/>
+            <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+      </svg>
+      <canvas class="topbar-particles" id="topbarFallingCanvas" aria-hidden="true"></canvas>
+    </div>
     <a class="brand" href="#home" aria-label="EPICS home">
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -47,18 +287,28 @@
       <a href="#learn">Learn</a>
     </nav>
     <div class="top-actions">
-      <button class="icon-button" id="themeToggle" aria-label="Toggle dark mode">☾</button>
-      <button class="icon-button notification-button" id="notifyButton" aria-label="Notifications">
-        <span class="notification-dot"></span>
-        ⟐
-      </button>
-      <a class="admin-access" href="#admin" aria-label="Admin dashboard">
-        <span class="admin-orbit"></span>
-        <span class="admin-shield">◆</span>
-        <span>Admin</span>
-      </a>
-      <button class="ghost-button" data-open-modal="loginModal">Sign in</button>
-      <button class="primary-button" data-open-modal="signupModal">Create account</button>
+      <button class="icon-button" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">☾</button>
+      <div class="auth-menu" id="authMenu">
+        <button class="auth-toggle icon-button" id="authToggle" aria-expanded="false" aria-haspopup="true" aria-label="Account menu">👤</button>
+        <div class="auth-dropdown" id="authDropdown" hidden role="menu">
+          <a class="auth-dropdown-item" href="#admin" role="menuitem">
+            <span class="auth-icon auth-admin-icon">◆</span>
+            <span>Admin dashboard</span>
+          </a>
+          <button class="auth-dropdown-item" data-open-modal="loginModal" role="menuitem">
+            <span class="auth-icon">🔑</span>
+            <span>Sign in</span>
+          </button>
+          <button class="auth-dropdown-item" data-open-modal="signupModal" role="menuitem">
+            <span class="auth-icon">＋</span>
+            <span>Create account</span>
+          </button>
+        </div>
+      </div>
+      <button class="icon-button action-button" data-open-modal="contributionModal" aria-label="Add observation" title="Add observation">＋</button>
+      <button class="icon-button action-button" id="moreToggle" aria-label="More options" title="More options" aria-expanded="false" aria-controls="moreMenu">⋯</button>
+    </div>
+    <div class="more-menu" id="moreMenu" hidden>
       <select id="languageSelect" aria-label="Choose language">
         <option>English</option>
         <option>Hindi</option>
@@ -66,6 +316,7 @@
         <option>Telugu</option>
         <option>Kannada</option>
       </select>
+      <button class="ghost-button" id="scrollTopButton" aria-label="Back to top">↑ Back to top</button>
     </div>
     <button class="menu-button" id="menuButton" aria-label="Open menu">☰</button>
   </header>
@@ -464,10 +715,6 @@
   </dialog>
 
   <div class="toast" id="toast">Saved to favourites</div>
-  <div class="floating-actions" aria-label="Quick actions">
-    <button id="scrollTopButton" aria-label="Back to top">↑</button>
-    <button data-open-modal="contributionModal" aria-label="Add observation">＋</button>
-  </div>
   <script src="script.js"></script>
 </body>
 </html>

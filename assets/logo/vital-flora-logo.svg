@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="mortarGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C17855"/>
+      <stop offset="0.5" stop-color="#A0523A"/>
+      <stop offset="1" stop-color="#7D3A28"/>
+    </linearGradient>
+    <linearGradient id="pestleGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#E8A88A"/>
+      <stop offset="0.5" stop-color="#D4917A"/>
+      <stop offset="1" stop-color="#C17855"/>
+    </linearGradient>
+    <linearGradient id="leafGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6DD47E"/>
+      <stop offset="1" stop-color="#3DAE50"/>
+    </linearGradient>
+    <linearGradient id="leafGrad2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5BC86E"/>
+      <stop offset="1" stop-color="#2D9442"/>
+    </linearGradient>
+    <radialGradient id="leafVein" cx="0.5" cy="0.3" r="0.7">
+      <stop offset="0" stop-color="#8AE89A"/>
+      <stop offset="1" stop-color="#3DAE50"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="1" dy="3" stdDeviation="4" flood-color="#00000030"/>
+    </filter>
+    <filter id="leafShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#00000025"/>
+    </filter>
+  </defs>
+
+  <!-- Background circle (subtle) -->
+  <circle cx="250" cy="250" r="220" fill="#FAFDF7" opacity="0.5"/>
+
+  <!-- Enso / Brush Circle -->
+  <g fill="none" stroke="#1A1A1A" stroke-width="22" stroke-linecap="round" opacity="0.85">
+    <path d="M250,28 C362,28 440,95 452,195 C462,280 415,370 320,420 C250,458 145,448 72,385 C35,350 18,300 22,250" stroke-dasharray="740" stroke-dashoffset="-50"/>
+  </g>
+  <!-- Enso end cap (small thick dot) -->
+  <circle cx="26" cy="250" r="13" fill="#1A1A1A" opacity="0.85"/>
+
+  <!-- === MORTAR === -->
+  <g filter="url(#shadow)">
+    <!-- Mortar body -->
+    <ellipse cx="215" cy="335" rx="95" ry="18" fill="#7D3A28" opacity="0.3"/>
+    <!-- Mortar bowl -->
+    <path d="M125,310 C125,260 160,225 215,220 C270,225 305,260 305,310 C305,340 260,355 215,355 C170,355 125,340 125,310Z" fill="url(#mortarGrad)"/>
+    <!-- Mortar rim -->
+    <ellipse cx="215" cy="222" rx="95" ry="20" fill="#D4917A"/>
+    <ellipse cx="215" cy="222" rx="85" ry="16" fill="#C17855"/>
+    <!-- Mortar base/foot -->
+    <ellipse cx="215" cy="358" rx="70" ry="14" fill="#9E4E35"/>
+    <ellipse cx="215" cy="355" rx="68" ry="12" fill="#7D3A28"/>
+  </g>
+
+  <!-- === PESTLE === -->
+  <g>
+    <!-- Pestle shadow -->
+    <ellipse cx="250" cy="340" rx="18" ry="6" fill="#00000015"/>
+    <!-- Pestle handle -->
+    <rect x="238" y="130" width="22" height="130" rx="10" fill="url(#pestleGrad)" transform="rotate(-8, 250, 130)"/>
+    <!-- Pestle knob -->
+    <circle cx="255" cy="128" r="16" fill="#D4917A"/>
+    <!-- Pestle grinding end (inside mortar) -->
+    <ellipse cx="230" cy="258" rx="16" ry="10" fill="#C17855" transform="rotate(-10, 230, 258)"/>
+    <!-- Striations on pestle handle -->
+    <g stroke="#B87860" stroke-width="1.5" opacity="0.4" transform="rotate(-8, 250, 130)">
+      <line x1="245" y1="155" x2="255" y2="155"/>
+      <line x1="245" y1="168" x2="255" y2="168"/>
+      <line x1="245" y1="181" x2="255" y2="181"/>
+      <line x1="246" y1="194" x2="254" y2="194"/>
+      <line x1="246" y1="207" x2="254" y2="207"/>
+      <line x1="247" y1="220" x2="253" y2="220"/>
+    </g>
+  </g>
+
+  <!-- === LEAVES === -->
+  <!-- Back left leaf -->
+  <g filter="url(#leafShadow)" transform="rotate(-35, 100, 195)">
+    <path d="M100,195 C100,165 140,150 155,175 C160,195 140,220 100,215 C80,212 90,200 100,195Z" fill="url(#leafGrad2)"/>
+    <path d="M100,195 L155,175" stroke="#2D9442" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <path d="M100,195 L130,210" stroke="#2D9442" stroke-width="1" fill="none" opacity="0.3"/>
+    <path d="M100,195 L125,180" stroke="#2D9442" stroke-width="1" fill="none" opacity="0.3"/>
+  </g>
+
+  <!-- Center main leaf (large) -->
+  <g filter="url(#leafShadow)" transform="rotate(10, 195, 190)">
+    <path d="M195,190 C195,140 250,120 265,165 C270,195 240,235 195,230 C165,227 175,210 195,190Z" fill="url(#leafGrad1)"/>
+    <path d="M195,190 L265,165" stroke="#2D9442" stroke-width="2" fill="none" opacity="0.5"/>
+    <path d="M195,190 L235,215" stroke="#2D9442" stroke-width="1.2" fill="none" opacity="0.35"/>
+    <path d="M195,190 L225,170" stroke="#2D9442" stroke-width="1.2" fill="none" opacity="0.35"/>
+    <path d="M195,190 L210,225" stroke="#2D9442" stroke-width="1" fill="none" opacity="0.25"/>
+    <path d="M195,190 L215,155" stroke="#2D9442" stroke-width="1" fill="none" opacity="0.25"/>
+  </g>
+
+  <!-- Middle right leaf -->
+  <g filter="url(#leafShadow)" transform="rotate(30, 255, 200)">
+    <path d="M255,200 C255,165 290,155 300,180 C305,200 285,225 255,220 C240,218 245,208 255,200Z" fill="url(#leafGrad2)"/>
+    <path d="M255,200 L300,180" stroke="#2D9442" stroke-width="1.5" fill="none" opacity="0.5"/>
+    <path d="M255,200 L280,215" stroke="#2D9442" stroke-width="1" fill="none" opacity="0.3"/>
+  </g>
+
+  <!-- Far right small leaf (mint-like) -->
+  <g filter="url(#leafShadow)" transform="rotate(65, 320, 300)">
+    <path d="M320,300 C318,280 340,270 350,285 C355,300 340,315 320,310 C308,308 310,302 320,300Z" fill="url(#leafGrad1)"/>
+    <path d="M320,300 L350,285" stroke="#2D9442" stroke-width="1" fill="none" opacity="0.4"/>
+  </g>
+
+  <!-- Floating top-left leaf -->
+  <g transform="rotate(-25, 90, 120)">
+    <path d="M90,120 C90,105 108,98 115,110 C118,120 108,130 90,127 C80,125 82,118 90,120Z" fill="url(#leafGrad1)" opacity="0.9"/>
+  </g>
+
+  <!-- Floating top leaf -->
+  <g transform="rotate(15, 250, 100)">
+    <path d="M250,100 C250,85 265,78 272,88 C275,98 265,108 250,105 C242,103 244,97 250,100Z" fill="url(#leafGrad2)" opacity="0.9"/>
+  </g>
+
+  <!-- Bottom-right mint cluster leaf -->
+  <g filter="url(#leafShadow)" transform="rotate(40, 330, 340)">
+    <path d="M330,340 C328,322 348,312 356,328 C360,340 345,352 330,348 C320,346 322,340 330,340Z" fill="url(#leafGrad1)"/>
+    <path d="M330,340 L356,328" stroke="#2D9442" stroke-width="1" fill="none" opacity="0.4"/>
+  </g>
+  <g filter="url(#leafShadow)" transform="rotate(60, 348, 325)">
+    <path d="M348,325 C346,310 362,302 368,315 C372,325 360,335 348,332 C340,330 342,325 348,325Z" fill="url(#leafGrad2)"/>
+  </g>
+
+  <!-- === CROSS on mortar === -->
+  <g transform="translate(215, 295)">
+    <rect x="-12" y="-4" width="24" height="8" rx="4" fill="#5BC86E" filter="url(#shadow)"/>
+    <rect x="-4" y="-12" width="8" height="24" rx="4" fill="#5BC86E"/>
+    <circle cx="0" cy="0" r="22" fill="#5BC86E" opacity="0.15"/>
+  </g>
+
+  <!-- === Small mortar leaves detail (mint cluster on right side of mortar) === -->
+  <g transform="rotate(-20, 310, 340)" opacity="0.9">
+    <path d="M310,340 C310,325 328,318 335,330 C338,340 328,350 310,347 C300,345 302,340 310,340Z" fill="url(#leafGrad1)"/>
+    <path d="M310,340 L335,330" stroke="#2D9442" stroke-width="1" fill="none" opacity="0.4"/>
+  </g>
+</svg>

@@ -7,9 +7,9 @@ const plants = [
     name: "Tulsi",
     scientific: "Ocimum tenuiflorum",
     family: "Lamiaceae",
-    uses: "Traditionally referenced for cough, cold, and general wellness.",
-    tags: ["Respiratory", "Immunity", "Sacred"],
-    image: "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?auto=format&fit=crop&w=700&q=80"
+    uses: "Sacred adaptogenic herb for immunity, respiratory health, stress relief, and digestive support. Rich in eugenol.",
+    tags: ["Immunity", "Respiratory", "Adaptogen", "Sacred", "Digestive"],
+    image: "assets/plants/Tulsi/tulsi_page.jpg"
   },
   {
     name: "Turmeric",
@@ -25,7 +25,7 @@ const plants = [
     family: "Asphodelaceae",
     uses: "Popular traditional external-use plant with clear care notes.",
     tags: ["Skin", "Succulent", "Home garden"],
-    image: "assets/plants/Aloe Vera/Green Minimalist Gardening and Planting Business Presentation conv 1.png"
+    image: "assets/plants/Aloe Vera/Green Minimalist Gardening and Planting Business Presentation conv 1.png?v=2"
   },
   {
     name: "Neem",
@@ -74,106 +74,159 @@ function initAnimatedBackground() {
   const context = canvas.getContext("2d", { alpha: true });
   const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const coarsePointerQuery = window.matchMedia("(pointer: coarse)");
-  const navigatorMemory = navigator.deviceMemory || 4;
-  const lowPower = navigatorMemory <= 4 || navigator.hardwareConcurrency <= 4 || coarsePointerQuery.matches;
+  const navMemory = navigator.deviceMemory || 4;
+  const lowPower = navMemory <= 4 || navigator.hardwareConcurrency <= 4 || coarsePointerQuery.matches;
+
   const state = {
-    width: 0,
-    height: 0,
-    dpr: 1,
-    points: [],
-    pollen: [],
-    glows: [],
-    leaves: [],
-    floatingLeaves: [],
-    raf: 0,
-    running: false,
+    width: 0, height: 0, dpr: 1,
+    points: [], pollen: [], leaves: [], floatingLeaves: [], glows: [],
+    raf: 0, running: false,
     reduced: reduceMotionQuery.matches,
     start: performance.now(),
-    lastLeaf: 0,
-    mouse: { x: -9999, y: -9999, active: false }
+    lastLeaf: 0, lastFrame: 0, frameCount: 0, fps: 60, lowFpsFrames: 0, skipNext: false,
+    mouse: { x: -9999, y: -9999, active: false, smoothX: -9999, smoothY: -9999 },
+    connGrowthTarget: 1, allConnections: null, nodeConnections: null,
+    offscreen: null, offCtx: null,
+    haloGrad: null
   };
 
-  function rand(min, max) {
-    return min + Math.random() * (max - min);
+  function smoothMouse() {
+    if (state.mouse.active) {
+      state.mouse.smoothX += (state.mouse.x - state.mouse.smoothX) * 0.18;
+      state.mouse.smoothY += (state.mouse.y - state.mouse.smoothY) * 0.18;
+    } else {
+      state.mouse.smoothX += (-9999 - state.mouse.smoothX) * 0.05;
+      state.mouse.smoothY += (-9999 - state.mouse.smoothY) * 0.05;
+    }
+  }
+
+  function rand(min, max) { return min + Math.random() * (max - min); }
+
+  /* ── Grid-based Poisson-like placement for even distribution ── */
+  function poissonGridPlacement(count, width, height) {
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0 || count <= 0) {
+      return [];
+    }
+
+    const cellSize = Math.sqrt((width * height) / count);
+    if (!Number.isFinite(cellSize) || cellSize <= 0) {
+      return [];
+    }
+
+    const cols = Math.max(1, Math.ceil(width / cellSize));
+    const rows = Math.max(1, Math.ceil(height / cellSize));
+    const grid = Array.from({ length: rows }, () => new Array(cols).fill(null));
+    const result = [];
+
+    let attempts = 0;
+    const maxAttempts = count * 40;
+    while (result.length < count && attempts < maxAttempts) {
+      attempts++;
+      const x = rand(8, width - 8);
+      const y = rand(8, height - 8);
+      const col = Math.floor(x / cellSize);
+      const row = Math.floor(y / cellSize);
+      let occupied = false;
+      for (let r = Math.max(0, row - 2); r <= Math.min(rows - 1, row + 2); r++) {
+        for (let c = Math.max(0, col - 2); c <= Math.min(cols - 1, col + 2); c++) {
+          if (grid[r][c]) {
+            const dx = x - grid[r][c].x;
+            const dy = y - grid[r][c].y;
+            if (dx * dx + dy * dy < cellSize * cellSize * 0.55) { occupied = true; break; }
+          }
+        }
+        if (occupied) break;
+      }
+      if (!occupied) {
+        const pt = { x, y };
+        result.push(pt);
+        grid[row][col] = pt;
+      }
+    }
+    return result;
   }
 
   function resize() {
     state.width = window.innerWidth;
     state.height = window.innerHeight;
-    state.dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1.35 : 1.75);
+    state.dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1.25 : 1.5);
     canvas.width = Math.floor(state.width * state.dpr);
     canvas.height = Math.floor(state.height * state.dpr);
     canvas.style.width = `${state.width}px`;
     canvas.style.height = `${state.height}px`;
     context.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+
+    shell.style.contain = "layout paint style";
+    canvas.style.willChange = "transform";
+  canvas.style.transform = "translateZ(0)";
+
+    state.allConnections = null;
+    state.offscreen = null;
+    state.haloGrad = null;
+
+    state.connGrowthTarget = 1;
+
+    // Pre-build halo sprite
+    if (state.width > 0 && state.height > 0) {
+      const size = 256;
+      const offCanvas = document.createElement("canvas");
+      offCanvas.width = size;
+      offCanvas.height = size;
+      const offCtx = offCanvas.getContext("2d");
+      const grad = offCtx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      grad.addColorStop(0, "rgba(47, 196, 148, 0.18)");
+      grad.addColorStop(0.45, "rgba(47, 196, 148, 0.055)");
+      grad.addColorStop(1, "rgba(47, 196, 148, 0)");
+      offCtx.fillStyle = grad;
+      offCtx.fillRect(0, 0, size, size);
+      state.haloGrad = offCanvas;
+    }
+
     seed();
     draw(performance.now());
   }
 
   function seed() {
     const area = state.width * state.height;
-    const networkCount = state.reduced ? 62 : Math.min(lowPower ? 135 : 220, Math.max(86, Math.floor(area / (lowPower ? 7800 : 5400))));
-    const pollenCount = state.reduced ? 150 : Math.min(lowPower ? 720 : 1450, Math.max(320, Math.floor(area / (lowPower ? 1650 : 850))));
-    const glowCount = state.reduced ? 5 : lowPower ? 8 : 13;
+    const networkCount = state.reduced ? 52 : Math.min(lowPower ? 80 : 120, Math.max(42, Math.floor(area / (lowPower ? 11000 : 7000))));
+    const pollenCount = state.reduced ? 140 : Math.min(lowPower ? 850 : 1500, Math.max(220, Math.floor(area / (lowPower ? 1900 : 900))));
+    const glowCount = state.reduced ? 5 : lowPower ? 8 : 12;
 
-    const columns = Math.ceil(Math.sqrt(networkCount * state.width / state.height));
-    const rows = Math.ceil(networkCount / columns);
-    const cellW = state.width / columns;
-    const cellH = state.height / rows;
-    state.points = Array.from({ length: networkCount }, (_, index) => {
-      const column = index % columns;
-      const row = Math.floor(index / columns);
-      const root = index / networkCount;
-      return {
-        x: column * cellW + rand(cellW * 0.16, cellW * 0.84),
-        y: row * cellH + rand(cellH * 0.16, cellH * 0.84),
-        baseX: 0,
-        baseY: 0,
-        vx: rand(-0.026, 0.026),
-        vy: rand(-0.02, 0.02),
-        phase: rand(0, Math.PI * 2),
-        pulse: rand(0, Math.PI * 2),
-        size: rand(0.95, 2.2),
-        drift: rand(0.18, 0.72),
-        family: root
-      };
-    });
-    state.points.forEach((point) => {
-      point.baseX = point.x;
-      point.baseY = point.y;
-    });
-
-    state.pollen = Array.from({ length: pollenCount }, () => ({
-      x: rand(0, state.width),
-      y: rand(0, state.height),
-      z: rand(0.35, 1),
-      size: rand(0.42, lowPower ? 1.22 : 1.48),
-      phase: rand(0, Math.PI * 2),
-      speed: rand(0.01, 0.038),
-      alpha: rand(0.22, 0.68)
+    const positions = poissonGridPlacement(networkCount, state.width, state.height);
+    state.points = positions.map((pos) => ({
+      x: pos.x, y: pos.y, baseX: pos.x, baseY: pos.y,
+      vx: rand(-0.02, 0.02), vy: rand(-0.015, 0.015),
+      phase: rand(0, Math.PI * 2), pulse: rand(0, Math.PI * 2),
+      size: rand(0.9, 1.9), drift: rand(0.15, 0.5),
+      growth: 0, growthSpeed: rand(0.006, 0.018), nodeAlpha: 0
     }));
 
-    const floatingLeafCount = state.reduced ? 8 : lowPower ? 18 : 34;
+    state.pollen = Array.from({ length: pollenCount }, () => ({
+      x: rand(0, state.width), y: rand(0, state.height),
+      z: rand(0.35, 1), size: rand(0.38, 1.1),
+      phase: rand(0, Math.PI * 2), speed: rand(0.008, 0.03),
+      alpha: rand(0.18, 0.58)
+    }));
+
+    const floatingLeafCount = state.reduced ? 10 : lowPower ? 24 : 48;
     state.floatingLeaves = Array.from({ length: floatingLeafCount }, () => ({
-      x: rand(0, state.width),
-      y: rand(0, state.height),
-      size: rand(5, lowPower ? 11 : 15),
-      angle: rand(0, Math.PI * 2),
-      phase: rand(0, Math.PI * 2),
-      drift: rand(0.08, 0.22),
-      alpha: rand(0.18, 0.36)
+      x: rand(0, state.width), y: rand(0, state.height),
+      size: rand(4, lowPower ? 9 : 13),
+      angle: rand(0, Math.PI * 2), phase: rand(0, Math.PI * 2),
+      drift: rand(0.06, 0.18), alpha: rand(0.14, 0.3),
+      leafType: Math.random() < 0.3 ? 1 : 0
     }));
 
     state.glows = Array.from({ length: glowCount }, () => ({
-      x: rand(0, state.width),
-      y: rand(0, state.height),
-      radius: rand(70, 210),
-      phase: rand(0, Math.PI * 2),
-      hue: Math.random() > 0.45 ? "47, 196, 148" : "46, 176, 178"
+      x: rand(0, state.width), y: rand(0, state.height),
+      radius: rand(60, 160), phase: rand(0, Math.PI * 2),
+      hue: Math.random() > 0.5 ? "47,196,148" : "46,176,178"
     }));
+    state.allConnections = null;
+    state.nodeConnections = null;
   }
 
-  function drawLeaf(x, y, angle, age, scale = 1, alphaBoost = 1) {
+  function drawLeaf(x, y, angle, age, scale = 1, alphaBoost = 1, leafType = 0) {
     const life = Math.max(0, 1 - age / 6200);
     if (life <= 0) return;
     const sway = Math.sin(performance.now() * 0.0014 + x * 0.02) * 0.18;
@@ -181,26 +234,43 @@ function initAnimatedBackground() {
     context.save();
     context.translate(x, y);
     context.rotate(angle + sway);
-    context.globalAlpha = life * 0.68 * alphaBoost;
-    context.fillStyle = "rgba(96, 236, 174, 0.82)";
-    context.shadowColor = "rgba(57, 224, 169, 0.62)";
-    context.shadowBlur = 15;
-    context.beginPath();
-    context.moveTo(0, -size);
-    context.bezierCurveTo(size * 0.75, -size * 0.25, size * 0.52, size * 0.68, 0, size);
-    context.bezierCurveTo(-size * 0.62, size * 0.25, -size * 0.55, -size * 0.58, 0, -size);
-    context.fill();
-    context.strokeStyle = "rgba(184, 255, 224, 0.5)";
-    context.lineWidth = 0.55;
-    context.beginPath();
-    context.moveTo(0, -size * 0.74);
-    context.lineTo(0, size * 0.72);
-    context.stroke();
+    context.globalAlpha = life * 0.52 * alphaBoost;
+
+    if (leafType === 0) {
+      context.fillStyle = "rgba(96, 236, 174, 0.82)";
+      context.beginPath();
+      context.moveTo(0, -size);
+      context.bezierCurveTo(size * 0.75, -size * 0.25, size * 0.52, size * 0.68, 0, size);
+      context.bezierCurveTo(-size * 0.62, size * 0.25, -size * 0.55, -size * 0.58, 0, -size);
+      context.fill();
+      context.strokeStyle = "rgba(184, 255, 224, 0.5)";
+      context.lineWidth = 0.55;
+      context.beginPath();
+      context.moveTo(0, -size * 0.74);
+      context.lineTo(0, size * 0.72);
+      context.stroke();
+    } else {
+      context.fillStyle = "rgba(56, 190, 130, 0.85)";
+      context.beginPath();
+      context.moveTo(0, -size * 1.15);
+      context.bezierCurveTo(size * 0.45, -size * 0.35, size * 0.38, size * 0.65, 0, size * 1.05);
+      context.bezierCurveTo(-size * 0.38, size * 0.65, -size * 0.45, -size * 0.35, 0, -size * 1.15);
+      context.fill();
+      context.strokeStyle = "rgba(160, 255, 220, 0.45)";
+      context.lineWidth = 0.4;
+      context.beginPath();
+      context.moveTo(0, -size * 0.85);
+      context.lineTo(0, size * 0.85);
+      context.stroke();
+    }
+
     context.restore();
   }
 
   function drawFloatingLeaves(elapsed) {
-    state.floatingLeaves.forEach((leaf) => {
+    const leaves = state.floatingLeaves;
+    for (let i = 0; i < leaves.length; i++) {
+      const leaf = leaves[i];
       if (!state.reduced) {
         leaf.x += Math.sin(elapsed * 0.16 + leaf.phase) * leaf.drift;
         leaf.y += Math.cos(elapsed * 0.11 + leaf.phase) * leaf.drift - leaf.drift * 0.18;
@@ -210,38 +280,50 @@ function initAnimatedBackground() {
       if (leaf.x > state.width + 30) leaf.x = -30;
       if (leaf.y < -30) leaf.y = state.height + 30;
       if (leaf.y > state.height + 30) leaf.y = -30;
-      drawLeaf(leaf.x, leaf.y, leaf.angle + Math.sin(elapsed * 0.5 + leaf.phase) * 0.22, 1700, leaf.size / 14, leaf.alpha);
-    });
+      drawLeaf(leaf.x, leaf.y, leaf.angle + Math.sin(elapsed * 0.5 + leaf.phase) * 0.22, 1700, leaf.size / 14, leaf.alpha, leaf.leafType || 0);
+    }
   }
 
   function draw(time) {
+    if (state.skipNext) {
+      state.skipNext = false;
+    }
+
     context.clearRect(0, 0, state.width, state.height);
     const elapsed = (time - state.start) * 0.001;
-    const zoom = state.reduced ? 1 : 1.018 + Math.sin(elapsed * Math.PI / 20) * 0.018;
-    const cx = state.width / 2;
-    const cy = state.height / 2;
 
-    context.save();
-    context.translate(cx, cy);
-    context.scale(zoom, zoom);
-    context.translate(-cx, -cy);
+    smoothMouse();
+
+    if (state.lastFrame > 0) {
+      const dt = time - state.lastFrame;
+      if (dt > 0) state.fps = 0.92 * state.fps + 0.08 * (1000 / dt);
+      if (state.fps < 45) {
+        state.lowFpsFrames++;
+        if (state.lowFpsFrames > 60) state.skipNext = true;
+      } else {
+        state.lowFpsFrames = 0;
+      }
+    }
+    state.lastFrame = time;
+    state.frameCount++;
 
     drawLargeGlows(elapsed);
     if (!state.reduced) updatePoints(elapsed);
     drawNetwork(elapsed, time);
     drawPollen(elapsed);
     drawFloatingLeaves(elapsed);
-    context.restore();
 
     state.leaves = state.leaves.filter((leaf) => time - leaf.created < 6200);
-    state.leaves.forEach((leaf) => drawLeaf(leaf.x, leaf.y, leaf.angle, time - leaf.created, leaf.scale || 1, 1));
+    state.leaves.forEach((leaf) => drawLeaf(leaf.x, leaf.y, leaf.angle, time - leaf.created, leaf.scale || 1, 1, leaf.leafType || 0));
 
     if (state.running) state.raf = requestAnimationFrame(draw);
   }
 
   function updatePoints(elapsed) {
     const radius = lowPower ? 100 : 128;
-    state.points.forEach((point) => {
+    const points = state.points;
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i];
       point.baseX += point.vx + Math.sin(elapsed * 0.1 + point.phase) * 0.012 * point.drift;
       point.baseY += point.vy + Math.cos(elapsed * 0.085 + point.phase) * 0.01 * point.drift;
       if (point.baseX < -120) point.baseX = state.width + 120;
@@ -252,109 +334,138 @@ function initAnimatedBackground() {
       let repelX = 0;
       let repelY = 0;
       if (state.mouse.active) {
-        const dx = point.baseX - state.mouse.x;
-        const dy = point.baseY - state.mouse.y;
-        const distance = Math.hypot(dx, dy);
-        if (distance < radius && distance > 0.01) {
-          const force = (1 - distance / radius) * (lowPower ? 18 : 30);
-          repelX = (dx / distance) * force;
-          repelY = (dy / distance) * force;
+        const dx = point.baseX - state.mouse.smoothX;
+        const dy = point.baseY - state.mouse.smoothY;
+        const sqDist = dx * dx + dy * dy;
+        const r2 = radius * radius;
+        if (sqDist < r2 && sqDist > 0.01) {
+          const dist = Math.sqrt(sqDist);
+          const force = (1 - dist / radius) * (lowPower ? 18 : 30);
+          repelX = (dx / dist) * force;
+          repelY = (dy / dist) * force;
         }
       }
       point.x += (point.baseX + repelX - point.x) * 0.032;
       point.y += (point.baseY + repelY - point.y) * 0.032;
-    });
+    }
   }
 
   function drawLargeGlows(elapsed) {
-    state.glows.forEach((glow) => {
+    if (!state.haloGrad) return;
+    const glows = state.glows;
+    for (let i = 0; i < glows.length; i++) {
+      const glow = glows[i];
       const x = glow.x + Math.sin(elapsed * 0.055 + glow.phase) * 22;
       const y = glow.y + Math.cos(elapsed * 0.047 + glow.phase) * 18;
-      const gradient = context.createRadialGradient(x, y, 0, x, y, glow.radius);
-      gradient.addColorStop(0, `rgba(${glow.hue}, ${state.reduced ? 0.1 : 0.16})`);
-      gradient.addColorStop(0.45, `rgba(${glow.hue}, 0.055)`);
-      gradient.addColorStop(1, `rgba(${glow.hue}, 0)`);
-      context.fillStyle = gradient;
-      context.beginPath();
-      context.arc(x, y, glow.radius, 0, Math.PI * 2);
-      context.fill();
-    });
+      const alpha = state.reduced ? 0.1 : 0.16;
+      context.globalAlpha = alpha;
+      context.drawImage(state.haloGrad, x - glow.radius, y - glow.radius, glow.radius * 2, glow.radius * 2);
+    }
+    context.globalAlpha = 1;
   }
 
   function drawNetwork(elapsed, time) {
-    const maxDistance = lowPower ? 118 : 148;
-    const mouseGlowRadius = lowPower ? 120 : 150;
+    const maxDistance = lowPower ? 110 : 135;
+    const mouseGlowRadius = lowPower ? 100 : 120;
+    const mouseGlowRadiusSq = mouseGlowRadius * mouseGlowRadius;
     context.lineCap = "round";
 
-    for (let i = 0; i < state.points.length; i += 1) {
-      const a = state.points[i];
-      for (let j = i + 1; j < state.points.length; j += 1) {
-        const b = state.points[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const distance = Math.hypot(dx, dy);
-        if (distance > maxDistance) continue;
-
-        const growth = (Math.sin(elapsed * 0.18 + a.phase + b.phase) + 1) * 0.5;
-        const alpha = Math.pow(1 - distance / maxDistance, 1.55) * (0.18 + growth * 0.4);
-        const midX = (a.x + b.x) * 0.5;
-        const midY = (a.y + b.y) * 0.5;
-        const mouseDistance = state.mouse.active ? Math.hypot(midX - state.mouse.x, midY - state.mouse.y) : 9999;
-        const interaction = mouseDistance < mouseGlowRadius ? (1 - mouseDistance / mouseGlowRadius) : 0;
-
-        context.strokeStyle = `rgba(31, 188, 138, ${Math.min(0.82, alpha + interaction * 0.28)})`;
-        context.lineWidth = 0.42 + growth * 0.28 + interaction * 0.5;
-        context.shadowColor = `rgba(70, 239, 183, ${0.24 + interaction * 0.34})`;
-        context.shadowBlur = 5 + interaction * 10;
-        context.beginPath();
-        context.moveTo(a.x, a.y);
-        const curve = Math.sin(elapsed * 0.12 + a.phase) * 8;
-        context.quadraticCurveTo(midX + curve, midY - curve, b.x, b.y);
-        context.stroke();
-
-        if (growth > 0.88 && !state.reduced) {
-          const highlight = (growth - 0.88) / 0.12;
-          context.strokeStyle = `rgba(116, 255, 199, ${0.16 * highlight + interaction * 0.12})`;
-          context.lineWidth = 1.1 + interaction * 0.45;
-          context.shadowColor = "rgba(74, 241, 187, 0.48)";
-          context.shadowBlur = 12;
-          context.beginPath();
-          context.moveTo(a.x, a.y);
-          context.quadraticCurveTo(midX + curve, midY - curve, b.x, b.y);
-          context.stroke();
-        }
-
-        if (!state.reduced && time - state.lastLeaf > (lowPower ? 1500 : 900) && growth > 0.94 && Math.random() > 0.965) {
-          const sprouts = lowPower ? 1 : 1 + Math.floor(Math.random() * 3);
-          for (let sprout = 0; sprout < sprouts; sprout += 1) {
-            const t = rand(0.28, 0.72);
-            const leafX = a.x + (b.x - a.x) * t + rand(-5, 5);
-            const leafY = a.y + (b.y - a.y) * t + rand(-5, 5);
-            state.leaves.push({
-              x: leafX,
-              y: leafY,
-              angle: Math.atan2(dy, dx) + Math.PI / 2 + rand(-0.55, 0.55),
-              scale: rand(0.72, 1.18),
-              created: time - sprout * 260
-            });
+    if (!state.allConnections) {
+      const conns = [];
+      const nodeConns = state.points.map(() => []);
+      for (let i = 0; i < state.points.length; i++) {
+        for (let j = i + 1; j < state.points.length; j++) {
+          const dx = state.points[i].x - state.points[j].x;
+          const dy = state.points[i].y - state.points[j].y;
+          const distSq = dx * dx + dy * dy;
+          const maxDistSq = maxDistance * maxDistance;
+          if (distSq <= maxDistSq) {
+            const dist = Math.sqrt(distSq);
+            conns.push({ a: i, b: j, dist, growth: 0, distSq });
+            nodeConns[i].push(conns.length - 1);
+            nodeConns[j].push(conns.length - 1);
           }
-          state.lastLeaf = time;
+        }
+      }
+      state.allConnections = conns;
+      state.nodeConnections = nodeConns;
+      state.connGrowthTarget = 1;
+    }
+
+    const conns = state.allConnections;
+    const nodeConns = state.nodeConnections;
+
+    for (let c = 0; c < conns.length; c++) {
+      const conn = conns[c];
+      conn.growth += (state.connGrowthTarget - conn.growth) * 0.018;
+      if (conn.growth < 0.005) continue;
+
+      const a = state.points[conn.a];
+      const b = state.points[conn.b];
+      const smooth = conn.growth < 1
+        ? conn.growth * conn.growth * (3 - 2 * conn.growth)
+        : 1;
+      const growthWave = (Math.sin(elapsed * 0.18 + a.phase + b.phase) + 1) * 0.5;
+
+      if (!conn._alphaCache || conn._elapsed !== elapsed) {
+        conn._alphaCache = Math.pow(1 - conn.dist / maxDistance, 1.55);
+        conn._elapsed = elapsed;
+      }
+      const alpha = conn._alphaCache * (0.18 + growthWave * 0.4) * smooth;
+      if (alpha < 0.005) continue;
+
+      const midX = (a.x + b.x) * 0.5;
+      const midY = (a.y + b.y) * 0.5;
+      let interaction = 0;
+      if (state.mouse.active) {
+        const mdx = midX - state.mouse.smoothX;
+        const mdy = midY - state.mouse.smoothY;
+        const mDistSq = mdx * mdx + mdy * mdy;
+        if (mDistSq < mouseGlowRadiusSq) {
+          interaction = 1 - Math.sqrt(mDistSq) / mouseGlowRadius;
         }
       }
 
-      const pulse = (Math.sin(elapsed * 0.55 + a.pulse) + 1) * 0.5;
-      context.shadowColor = "rgba(62, 236, 181, 0.58)";
-      context.shadowBlur = 10;
-      context.fillStyle = `rgba(116, 249, 202, ${0.46 + pulse * 0.34})`;
+      const drawAlpha = Math.min(0.52, alpha + interaction * 0.18);
+      context.strokeStyle = `rgba(31, 188, 138, ${drawAlpha})`;
+      context.lineWidth = 0.26 + growthWave * 0.16 + interaction * 0.34;
       context.beginPath();
-      context.arc(a.x, a.y, a.size, 0, Math.PI * 2);
+      context.moveTo(a.x, a.y);
+      const endX = a.x + (b.x - a.x) * smooth;
+      const endY = a.y + (b.y - a.y) * smooth;
+      const curve = Math.sin(elapsed * 0.12 + a.phase) * 8;
+      context.quadraticCurveTo(midX + curve, midY - curve, endX, endY);
+      context.stroke();
+    }
+
+    for (let i = 0; i < state.points.length; i++) {
+      const point = state.points[i];
+      const myConns = nodeConns[i];
+      if (!myConns || myConns.length === 0) {
+        point.nodeAlpha *= 0.95;
+        continue;
+      }
+      let avgGrowth = 0;
+      for (let c = 0; c < myConns.length; c++) {
+        avgGrowth += conns[myConns[c]].growth;
+      }
+      avgGrowth /= myConns.length;
+      point.nodeAlpha += (avgGrowth - point.nodeAlpha) * 0.04;
+
+      if (point.nodeAlpha < 0.02) continue;
+      const pulse = (Math.sin(elapsed * 0.55 + point.pulse) + 1) * 0.5;
+      const na = point.nodeAlpha * (0.46 + pulse * 0.34);
+      context.fillStyle = `rgba(116, 249, 202, ${na})`;
+      context.beginPath();
+      context.arc(point.x, point.y, point.size, 0, Math.PI * 2);
       context.fill();
     }
-    context.shadowBlur = 0;
   }
 
   function drawPollen(elapsed) {
-    state.pollen.forEach((speck) => {
+    const pollen = state.pollen;
+    for (let i = 0; i < pollen.length; i++) {
+      const speck = pollen[i];
       if (!state.reduced) {
         speck.x += Math.sin(elapsed * speck.speed + speck.phase) * 0.06 * speck.z;
         speck.y -= speck.speed * speck.z;
@@ -363,12 +474,12 @@ function initAnimatedBackground() {
         speck.y = state.height + 8;
         speck.x = rand(0, state.width);
       }
-      const shimmer = (Math.sin(elapsed * 0.9 + speck.phase) + 1) * 0.5;
+      const shimmer = (Math.sin(elapsed * 0.8 + speck.phase) + 1) * 0.5;
       context.fillStyle = `rgba(125, 239, 197, ${speck.alpha * (0.55 + shimmer * 0.45)})`;
       context.beginPath();
       context.arc(speck.x, speck.y, speck.size * speck.z, 0, Math.PI * 2);
       context.fill();
-    });
+    }
   }
 
   function start() {
@@ -381,6 +492,7 @@ function initAnimatedBackground() {
   function stop() {
     state.running = false;
     cancelAnimationFrame(state.raf);
+    state.raf = 0;
   }
 
   function handlePointerMove(event) {
@@ -399,7 +511,9 @@ function initAnimatedBackground() {
 
   function handleMotionPreference() {
     state.reduced = reduceMotionQuery.matches || document.body.classList.contains("reduce-motion");
+    state.allConnections = null;
     seed();
+    state.fps = 60;
     draw(performance.now());
     state.reduced ? stop() : start();
   }
@@ -433,24 +547,204 @@ function initAnimatedBackground() {
 
 const animatedBackground = initAnimatedBackground();
 
+// ── Falling particles, ripening fruits, and birds in header ──
+(function initFallingParticles() {
+  if (document.body.classList.contains("reduce-motion")) return;
+  const canvas = document.getElementById("topbarFallingCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+  let birds = [];
+  const MAX_PARTICLES = 14;
+
+  function resize() {
+    const header = canvas.closest(".topbar");
+    if (!header) return;
+    canvas.width = header.offsetWidth;
+    canvas.height = header.offsetHeight * 3;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  function spawnBird() {
+    return {
+      x: -30,
+      y: 12 + Math.random() * 30,
+      speed: 0.3 + Math.random() * 0.5,
+      wingPhase: Math.random() * Math.PI * 2,
+      wingSpeed: 0.06 + Math.random() * 0.04,
+      size: 3 + Math.random() * 4,
+      color: Math.random() > 0.5 ? "#1a3a2a" : "#152e20",
+    };
+  }
+
+  function spawnParticle() {
+    const rand = Math.random();
+    const isFruit = rand < 0.22;
+    const isSeed = rand >= 0.22 && rand < 0.38;
+    const s = 3 + Math.random() * 4;
+    const fruitColors = ["#8b2500", "#a03020", "#c45c26", "#7a1f00", "#5c3a1e"];
+    const fruitRipe = isFruit ? Math.random() < 0.4 : false;
+    const autumnColors = ["#d4862b", "#c45c26", "#e0a030", "#b84e1e", "#a0522d", "#d4604a", "#8b4513"];
+    return {
+      x: Math.random() * (canvas.width + 60) - 30,
+      y: isFruit || isSeed ? -s * 2 - Math.random() * 40 : -s * 2,
+      size: isSeed ? 5 + Math.random() * 4 : s,
+      speedY: isFruit ? 0.12 + Math.random() * 0.2 : isSeed ? 0.18 + Math.random() * 0.25 : 0.22 + Math.random() * 0.4,
+      swayAmp: isSeed ? 1.5 + Math.random() * 2.5 : 0.3 + Math.random() * 0.9,
+      swaySpeed: 0.008 + Math.random() * 0.018,
+      swayOffset: Math.random() * Math.PI * 2,
+      rotation: Math.random() * Math.PI * 2,
+      rotSpeed: isSeed ? 0.03 + Math.random() * 0.04 : (Math.random() - 0.5) * 0.012,
+      isLeaf: !isFruit && !isSeed,
+      isSeed: isSeed,
+      color: isFruit
+        ? fruitColors[Math.floor(Math.random() * fruitColors.length)]
+        : isSeed ? "#8b6914" : autumnColors[Math.floor(Math.random() * autumnColors.length)],
+      age: 0,
+      isRipe: fruitRipe,
+      ripeAge: fruitRipe ? Math.floor(Math.random() * 200) : 0,
+    };
+  }
+
+  function drawLeaf(p) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rotation);
+    ctx.beginPath();
+    ctx.moveTo(0, -p.size);
+    ctx.bezierCurveTo(p.size * 0.7, -p.size * 0.5, p.size * 0.7, p.size * 0.5, 0, p.size);
+    ctx.bezierCurveTo(-p.size * 0.7, p.size * 0.5, -p.size * 0.7, -p.size * 0.5, 0, -p.size);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(0, -p.size * 0.7);
+    ctx.lineTo(0, p.size * 0.7);
+    ctx.strokeStyle = "rgba(0,0,0,0.12)";
+    ctx.lineWidth = 0.35;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawSeed(p) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rotation);
+    ctx.globalAlpha = 0.9;
+    // Helicopter seed body (small stem + wing)
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.moveTo(0, -p.size);
+    ctx.lineTo(-p.size * 0.22, -p.size * 0.12);
+    ctx.lineTo(-p.size * 0.22, p.size * 0.6);
+    ctx.lineTo(p.size * 0.22, p.size * 0.6);
+    ctx.lineTo(p.size * 0.22, -p.size * 0.12);
+    ctx.closePath();
+    ctx.fill();
+    // Seed outline
+    ctx.strokeStyle = "rgba(0,0,0,0.15)";
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+    // Small dot (seed kernel)
+    ctx.fillStyle = "rgba(60,35,10,0.8)";
+    ctx.beginPath();
+    ctx.arc(0, -p.size * 0.15, p.size * 0.13, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawFruit(p) {
+    const life = Math.max(0, 1 - p.age / 600);
+    const alpha = life * 0.85;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+    // small highlight
+    ctx.beginPath();
+    ctx.arc(p.x - p.size * 0.25, p.y - p.size * 0.25, p.size * 0.3, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255,0.22)";
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawBird(b) {
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    ctx.strokeStyle = b.color;
+    ctx.lineWidth = 1.5;
+    ctx.lineCap = "round";
+    const wingY = Math.sin(b.wingPhase) * 3.5;
+    ctx.beginPath();
+    ctx.moveTo(-b.size, wingY);
+    ctx.quadraticCurveTo(-b.size * 0.3, wingY - 2, 0, wingY + 0.5);
+    ctx.quadraticCurveTo(b.size * 0.3, wingY - 2, b.size, wingY);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Spawn particles
+    if (particles.length < MAX_PARTICLES && Math.random() < 0.025) {
+      particles.push(spawnParticle());
+    }
+    // Spawn birds occasionally
+    if (birds.length < 3 && Math.random() < 0.003) {
+      birds.push(spawnBird());
+    }
+
+    // Update & draw falling particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.age++;
+      p.y += p.speedY;
+      p.x += Math.sin(p.age * p.swaySpeed + p.swayOffset) * p.swayAmp;
+      p.rotation += p.rotSpeed;
+
+      // Ripening: change color as fruit ages
+      if (p.isFruit && !p.isRipe && p.age > p.ripeAge) {
+        const colors = ["#8b4513", "#a0522d", "#c45c26", "#d4862b"];
+        p.color = colors[Math.floor(Math.random() * colors.length)];
+        p.isRipe = true;
+      }
+
+      if (p.isLeaf) drawLeaf(p);
+      else if (p.isSeed) drawSeed(p);
+      else drawFruit(p);
+
+      if (p.y > canvas.height + p.size * 2) {
+        particles.splice(i, 1);
+      }
+    }
+
+    // Update & draw birds
+    for (let i = birds.length - 1; i >= 0; i--) {
+      const b = birds[i];
+      b.x += b.speed;
+      b.wingPhase += b.wingSpeed;
+      drawBird(b);
+      if (b.x > canvas.width + 40) {
+        birds.splice(i, 1);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+})();
+
 function applyBrandLogo() {
-  document.title = "Vital Flora | Medicinal Plant Knowledge Platform";
+  document.title = "EPICS | Medicinal Plant Knowledge Platform";
   const brand = document.querySelector(".brand");
   if (!brand) return;
-  brand.setAttribute("aria-label", "Vital Flora home");
-  brand.classList.add("logo-only");
-  const existingMark = brand.querySelector(".brand-mark, .brand-logo");
-  const logo = document.createElement("img");
-  logo.className = "brand-logo";
-  logo.src = "assets/logo/Vital Flora.jpeg";
-  logo.alt = "Vital Flora logo";
-  if (existingMark) {
-    existingMark.replaceWith(logo);
-  } else {
-    brand.prepend(logo);
-  }
-  const brandName = brand.querySelector("strong");
-  if (brandName) brandName.textContent = "Vital Flora";
+  brand.setAttribute("aria-label", "EPICS home");
+  const strong = brand.querySelector("strong");
+  if (strong) strong.textContent = "EPICS";
 }
 
 const sampleImages = {
@@ -464,31 +758,51 @@ const sampleImages = {
 };
 
 const slideImages = {
-  aloeVera: "assets/plants/Aloe Vera/Green Minimalist Gardening and Planting Business Presentation conv 1.png",
-  neem: "assets/plants/Neem/Green Playful Photosynthesis Group Project Presentation conv 1.png"
+  aloeVera: "assets/plants/Aloe Vera/Green Minimalist Gardening and Planting Business Presentation conv 1.png?v=2",
+  neem: "assets/plants/Neem/Green Playful Photosynthesis Group Project Presentation conv 1.png",
+  tulsi: "assets/plants/Tulsi/tulsi_page.jpg"
 };
 
 const symptomGuides = {
   cough: {
-      title: "Plant presentation deck",
-      intro: "Current sample slides include Aloe Vera and Neem. More plant slides can be added later from the database.",
-    hero: plants[2],
+      title: "Cough & respiratory plant deck",
+      intro: "Educational plant references for respiratory wellness including Tulsi, Aloe Vera, and Neem.",
+    hero: plants[0],
     slides: [
+      {
+        title: "Tulsi",
+        label: "Primary match",
+        image: slideImages.tulsi,
+        subtitle: "Ocimum tenuiflorum • Lamiaceae",
+        points: [
+          "Sacred adaptogenic herb known across many local knowledge systems.",
+          "Often categorized under respiratory wellness in traditional references.",
+          "Suitable for kitchen garden and community education modules."
+        ],
+        features: ["Adaptogen", "Respiratory", "Sacred", "Immunity"]
+      },
       {
         title: "Aloe Vera",
         label: "Plant profile",
         image: slideImages.aloeVera,
-        fullImage: true,
-        subtitle: "Exact uploaded Aloe Vera slide.",
-        points: []
+        subtitle: "Aloe barbadensis miller • Asphodelaceae",
+        points: [
+          "Succulent leaf gel widely documented in educational references.",
+          "Useful for showing leaf morphology and external-use applications.",
+          "Easy to grow in warm climates and home garden settings."
+        ],
+        features: ["Succulent", "External use", "Home garden", "Leaf gel"]
       },
       {
         title: "Neem",
-        label: "Plant profile",
+        label: "Conservation profile",
         image: slideImages.neem,
-        fullImage: true,
-        subtitle: "Exact uploaded Neem slide.",
-        points: []
+        subtitle: "Azadirachta indica • Meliaceae",
+        points: [
+          "Recognized in conservation education for its broad canopy and traditional significance.",
+          "Frequently used in school modules about plant protection and biodiversity.",
+          "Supports outdoor garden planting in suitable tropical regions."
+        ]
       }
     ]
   },
@@ -497,7 +811,7 @@ const symptomGuides = {
     intro: "Explore plants traditionally discussed for seasonal wellness with a visual plant-learning flow.",
     hero: plants[0],
     slides: [
-      { title: "Tulsi", label: "Primary match", image: sampleImages.tulsiLeaf, points: ["Known in many local knowledge systems.", "Often categorized under respiratory wellness.", "Suitable for garden education modules."] },
+      { title: "Tulsi", label: "Primary match", image: slideImages.tulsi, subtitle: "Ocimum tenuiflorum • Lamiaceae", points: ["Sacred adaptogenic herb known across many local knowledge systems.", "Often categorized under respiratory wellness in traditional references.", "Suitable for kitchen garden and community education modules."], features: ["Adaptogen", "Respiratory", "Sacred", "Immunity"] },
       { title: "Ginger + honey example", label: "Visual pairing", image: sampleImages.ginger, points: ["Common kitchen medicinal plant example.", "Useful for preparation and parts-used lessons.", "Pairs well with warm drink visuals."], ingredients: [{ name: "Ginger", note: "Rhizome example", image: sampleImages.ginger }, { name: "Honey", note: "Common pairing visual", image: sampleImages.honey }, { name: "Warm drink", note: "Presentation sample", image: sampleImages.tulsiTea }] }
     ]
   },
@@ -705,10 +1019,6 @@ document.addEventListener("click", (event) => {
     showToast("QR profile preview will connect to backend records later");
   }
 
-  if (event.target.id === "notifyButton") {
-    showToast("3 updates: garden event, new course, pending review");
-  }
-
   if (event.target.id === "textSizeButton") {
     document.body.classList.toggle("large-text");
     showToast(document.body.classList.contains("large-text") ? "Larger text enabled" : "Default text size restored");
@@ -774,6 +1084,46 @@ document.querySelector("#themeToggle").addEventListener("click", (event) => {
 
 document.querySelector("#menuButton").addEventListener("click", () => {
   document.querySelector("#mobileMenu").classList.toggle("open");
+});
+
+const moreToggle = document.querySelector("#moreToggle");
+const moreMenu = document.querySelector("#moreMenu");
+if (moreToggle && moreMenu) {
+  moreToggle.addEventListener("click", () => {
+    const open = moreMenu.toggleAttribute("hidden") !== null ? false : true;
+    moreMenu.hidden = !open;
+    moreMenu.classList.toggle("open", open);
+    moreToggle.setAttribute("aria-expanded", open);
+  });
+}
+
+/* ── Auth dropdown ── */
+const authToggle = document.querySelector("#authToggle");
+const authMenu = document.querySelector("#authMenu");
+const authDropdown = document.querySelector("#authDropdown");
+if (authToggle && authDropdown) {
+  authToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = authDropdown.hasAttribute("hidden");
+    authDropdown.hidden = !open;
+    authMenu.classList.toggle("open", open);
+    authToggle.setAttribute("aria-expanded", open);
+  });
+}
+document.addEventListener("click", (e) => {
+  if (authMenu && !authMenu.contains(e.target) && !authToggle?.contains(e.target)) {
+    authDropdown?.setAttribute("hidden", "");
+    authMenu?.classList.remove("open");
+    authToggle?.setAttribute("aria-expanded", "false");
+  }
+});
+
+document.addEventListener("click", (e) => {
+  if (moreMenu && !moreMenu.contains(e.target) && !moreToggle?.contains(e.target)) {
+    moreMenu.hidden = true;
+    moreMenu.classList.remove("open");
+    moreToggle?.setAttribute("aria-expanded", "false");
+  }
 });
 
 document.querySelectorAll("#mobileMenu a").forEach((link) => {
