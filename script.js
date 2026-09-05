@@ -893,6 +893,8 @@ function showPage(pageName = "home") {
 }
 
 function renderSymptomDeck(symptom = "cough") {
+  // Legacy deck support: the Symptoms page now uses the data-driven card viewer.
+  if (!symptomDeck || !deckTitle || !slideCounter || !slideDots) return;
   const guide = symptomGuides[symptom] || symptomGuides.cough;
   if (!guide) return;
   deckTitle.textContent = guide.title;
@@ -992,10 +994,12 @@ search.addEventListener("input", (event) => {
       ? `Found ${filtered.length} educational match${filtered.length === 1 ? "" : "es"}. Try filtering by region, family, or category next.`
       : "No exact match yet. Try a local name, plant family, or broader symptom like cough or digestion."
     : "Smart suggestions will appear as you search.";
-  if (symptomGuides[term]) {
+  if (plantMappings?.some((plant) => plant.symptoms.includes(term))) {
     location.hash = "symptoms";
     symptomSearch.value = term;
-    renderSymptomDeck(term);
+    const checkbox = [...document.querySelectorAll("#symptoms input[data-symptom]")].find((input) => input.dataset.symptom === term);
+    if (checkbox) checkbox.checked = true;
+    updateSymptomResults();
   }
 });
 
@@ -1066,6 +1070,7 @@ window.addEventListener("hashchange", () => {
 });
 
 window.addEventListener("keydown", (event) => {
+  if (!symptomDeck) return;
   if (location.hash.replace("#", "") !== "symptoms") return;
   if (event.key === "ArrowRight") {
     currentSlideIndex = (currentSlideIndex + 1) % currentSlides.length;
@@ -1130,35 +1135,201 @@ document.querySelectorAll("#mobileMenu a").forEach((link) => {
   link.addEventListener("click", () => document.querySelector("#mobileMenu").classList.remove("open"));
 });
 
-const selectedSymptoms = new Set();
-const symptomChips = document.querySelector("#symptomChips");
-if (symptomChips) {
-  symptomChips.addEventListener("click", (event) => {
-    if (!event.target.matches("button")) return;
-    const symptom = event.target.dataset.symptom;
-    event.target.classList.toggle("active");
-    selectedSymptoms.has(symptom) ? selectedSymptoms.delete(symptom) : selectedSymptoms.add(symptom);
-    const list = [...selectedSymptoms];
-    document.querySelector("#symptomResult").textContent = list.length
-      ? `Current sample matches: Aloe Vera and Neem. Open the slide deck for plant photos, profile details, visual cards, and references.`
-      : "Choose one or more symptoms to see educational plant matches.";
-    if (list.length) renderSymptomDeck(list[0]);
-  });
+// Data layer. This local array can later be replaced by a Supabase query without
+// changing the matching, card, or viewer functions below.
+const plantMappings = [
+  {
+    id: "tulsi", name: "Tulsi", scientificName: "Ocimum tenuiflorum",
+    symptoms: ["cough", "cold", "sore throat", "fever"],
+    traditionalUses: ["Traditionally referenced in South Asian respiratory-comfort preparations."],
+    evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
+    ageGroups: ["child", "adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Tea", "Infusion"],
+    description: "A widely documented medicinal plant with a long history in South Asian traditional knowledge.",
+    image: null, pdf: "assets/plants/Tulsi/Tulsi.pdf", pageCount: 3
+  },
+  {
+    id: "kalmegh", name: "Kalmegh", scientificName: "Andrographis paniculata",
+    symptoms: ["cold", "flu", "fever", "sore throat"],
+    traditionalUses: ["Traditionally included in regional herbal knowledge and plant-learning materials."],
+    evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Individual suitability can vary; seek professional advice when appropriate."],
+    ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Infusion"],
+    description: "A medicinal plant documented in traditional knowledge systems and community learning resources.",
+    image: null, pdf: "assets/plants/Kalmegh/Kalmegh.pdf", pageCount: 3
+  },
+  {
+    id: "punarnava", name: "Punarnava", scientificName: "Boerhavia diffusa",
+    symptoms: ["fatigue", "body ache", "indigestion"],
+    traditionalUses: ["Traditionally discussed in plant knowledge records for general wellness contexts."],
+    evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
+    ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Decoction", "Infusion"],
+    description: "A plant featured in traditional medicinal-plant documentation and educational reference material.",
+    image: null, pdf: "assets/plants/Punarnava/Punarnava.pdf", pageCount: 3
+  },
+  {
+    id: "bhringraj", name: "Bhringraj", scientificName: "Eclipta prostrata",
+    symptoms: ["headache", "fatigue", "body ache"],
+    traditionalUses: ["Traditionally valued in regional medicinal-plant knowledge and preparation practices."],
+    evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
+    ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Oil preparation", "Infusion"],
+    description: "A medicinal plant represented in traditional knowledge and educational plant guides.",
+    image: null, pdf: "assets/plants/Bhringraj/Bhringraj.pdf", pageCount: 3
+  }
+];
+
+const symptomResults = document.querySelector("#symptomResults");
+const symptomResult = document.querySelector("#symptomResult");
+const plantGuideModal = document.querySelector("#plantGuideModal");
+const guideViewer = document.querySelector("#guideViewer");
+const guideFrame = document.querySelector("#plantGuideFrame");
+const guideLoading = document.querySelector("#guideLoading");
+const guideError = document.querySelector("#guideError");
+const guideTitle = document.querySelector("#guideTitle");
+const pdfPageCounter = document.querySelector("#pdfPageCounter");
+let activeGuidePlant = null;
+let activePdfPage = 1;
+let guideLastTrigger = null;
+let guideLoadTimer = null;
+let guideTouchStartX = null;
+
+function getSelectedSymptoms() {
+  return [...new Set([...document.querySelectorAll("#symptoms input[data-symptom]:checked")].map((input) => input.dataset.symptom))];
 }
 
-document.querySelector("#symptomSearchButton").addEventListener("click", () => {
-  const term = symptomSearch.value.toLowerCase().trim();
-  renderSymptomDeck(term);
-});
+function calculateSymptomRelevance(plant, selected) {
+  return selected.filter((symptom) => plant.symptoms.includes(symptom)).length;
+}
 
-symptomSearch.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    renderSymptomDeck(symptomSearch.value.toLowerCase().trim());
+function getPlantsForSymptoms(selected) {
+  return plantMappings
+    .map((plant) => ({ ...plant, relevance: calculateSymptomRelevance(plant, selected) }))
+    .filter((plant) => plant.relevance > 0)
+    .sort((a, b) => b.relevance - a.relevance || a.name.localeCompare(b.name));
+}
+
+function renderPlantResults(plantsForSymptoms, selected) {
+  if (!symptomResults || !symptomResult) return;
+  if (!selected.length) {
+    symptomResult.textContent = "Choose one or more symptoms to see educational plant references.";
+    symptomResults.innerHTML = "";
+    return;
   }
-});
+  symptomResult.textContent = `${plantsForSymptoms.length ? "Showing traditional plant references ranked by matching symptoms." : "No guide matches these symptoms yet. Try another selected symptom."} Profile details are not used for matching.`;
+  symptomResults.innerHTML = plantsForSymptoms.length ? plantsForSymptoms.map((plant, index) => {
+    const matches = selected.filter((symptom) => plant.symptoms.includes(symptom));
+    return `<article class="symptom-result-card" style="--card-index:${index}">
+      <img loading="lazy" src="${plant.image || imageFallback}" alt="${plant.image ? `${plant.name} plant` : "Plant image unavailable"}">
+      <div class="symptom-result-card__body">
+        <div><span class="badge">${plant.relevance} matching symptom${plant.relevance === 1 ? "" : "s"}</span><h3>${plant.name}</h3><p class="latin">${plant.scientificName}</p></div>
+        <div><h4>Matching symptoms</h4><ul class="symptom-match-list">${matches.map((symptom) => `<li>${symptom}</li>`).join("")}</ul></div>
+        <p>${plant.description}</p>
+        <div><h4>${plant.evidenceLevel}</h4><p>${plant.traditionalUses[0]}</p></div>
+        <ul class="safety-list">${plant.safetyInformation.map((item) => `<li>${item}</li>`).join("")}</ul>
+        <button class="primary-button view-plant-guide" type="button" data-plant-id="${plant.id}" aria-label="View ${plant.name} guide">View Guide</button>
+      </div>
+    </article>`;
+  }).join("") : `<div class="symptom-empty">No traditional plant guide is currently mapped to this selection.</div>`;
+  attachImageFallbacks(symptomResults);
+}
 
-renderSymptomDeck("cough");
+function updateSymptomResults() {
+  const selected = getSelectedSymptoms();
+  renderPlantResults(getPlantsForSymptoms(selected), selected);
+}
+
+function updatePdfControls() {
+  const pageCount = activeGuidePlant?.pageCount || 1;
+  pdfPageCounter.textContent = `${activePdfPage} / ${pageCount}`;
+  document.querySelector("#previousPdfPage").disabled = activePdfPage <= 1;
+  document.querySelector("#nextPdfPage").disabled = activePdfPage >= pageCount;
+}
+
+function loadPdfPage() {
+  if (!activeGuidePlant) return;
+  guideViewer.classList.remove("is-ready");
+  guideViewer.classList.add("is-loading", "guide-page-transition");
+  guideLoading.hidden = false;
+  guideError.hidden = true;
+  guideFrame.src = `${encodeURI(activeGuidePlant.pdf)}#page=${activePdfPage}&view=FitH`;
+  clearTimeout(guideLoadTimer);
+  // Native PDF viewers do not consistently dispatch iframe load events. Reveal the
+  // viewer quickly instead of mistaking a successfully rendered PDF for an error.
+  guideLoadTimer = setTimeout(finishGuideLoad, 420);
+  updatePdfControls();
+}
+
+function finishGuideLoad() {
+  clearTimeout(guideLoadTimer);
+  guideLoading.hidden = true;
+  guideViewer.classList.remove("is-loading");
+  guideViewer.classList.add("is-ready");
+  setTimeout(() => guideViewer.classList.remove("guide-page-transition"), 300);
+}
+
+function openPlantGuide(plant) {
+  if (!plant?.pdf || !plantGuideModal) return;
+  activeGuidePlant = plant;
+  activePdfPage = 1;
+  guideTitle.textContent = `${plant.name} guide`;
+  if (!plantGuideModal.open) plantGuideModal.showModal();
+  loadPdfPage();
+  document.querySelector("#closePlantGuide").focus();
+}
+
+function closePlantGuide() {
+  if (!plantGuideModal?.open) return;
+  plantGuideModal.close();
+  clearTimeout(guideLoadTimer);
+  guideFrame.removeAttribute("src");
+  activeGuidePlant = null;
+  guideLastTrigger?.focus();
+}
+
+function changePdfPage(direction) {
+  if (!activeGuidePlant) return;
+  const nextPage = activePdfPage + direction;
+  if (nextPage < 1 || nextPage > activeGuidePlant.pageCount) return;
+  activePdfPage = nextPage;
+  loadPdfPage();
+}
+
+document.querySelectorAll("#symptoms input[data-symptom]").forEach((input) => input.addEventListener("change", updateSymptomResults));
+document.querySelector("#symptomSearchButton").addEventListener("click", () => {
+  const term = symptomSearch.value.trim().toLowerCase();
+  const checkbox = [...document.querySelectorAll("#symptoms input[data-symptom]")].find((input) => input.dataset.symptom === term);
+  if (checkbox) checkbox.checked = true;
+  updateSymptomResults();
+});
+symptomSearch.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") { event.preventDefault(); document.querySelector("#symptomSearchButton").click(); }
+});
+symptomResults?.addEventListener("click", (event) => {
+  const button = event.target.closest(".view-plant-guide");
+  if (!button) return;
+  guideLastTrigger = button;
+  openPlantGuide(plantMappings.find((plant) => plant.id === button.dataset.plantId));
+});
+document.querySelector("#closePlantGuide").addEventListener("click", closePlantGuide);
+document.querySelector("#previousPdfPage").addEventListener("click", () => changePdfPage(-1));
+document.querySelector("#nextPdfPage").addEventListener("click", () => changePdfPage(1));
+guideFrame.addEventListener("load", finishGuideLoad);
+guideFrame.addEventListener("error", () => { clearTimeout(guideLoadTimer); guideViewer.classList.remove("is-loading"); console.error("Vital Flora: plant guide failed to load", activeGuidePlant?.pdf); guideLoading.hidden = true; guideError.hidden = false; });
+guideViewer.addEventListener("touchstart", (event) => { guideTouchStartX = event.changedTouches[0]?.clientX ?? null; }, { passive: true });
+guideViewer.addEventListener("touchend", (event) => {
+  const endX = event.changedTouches[0]?.clientX;
+  if (guideTouchStartX === null || endX === undefined) return;
+  const distance = endX - guideTouchStartX;
+  guideTouchStartX = null;
+  if (Math.abs(distance) > 48) changePdfPage(distance < 0 ? 1 : -1);
+}, { passive: true });
+plantGuideModal.addEventListener("cancel", (event) => { event.preventDefault(); closePlantGuide(); });
+plantGuideModal.addEventListener("click", (event) => { if (event.target === plantGuideModal) closePlantGuide(); });
+window.addEventListener("keydown", (event) => {
+  if (!plantGuideModal?.open) return;
+  if (event.key === "Escape") { event.preventDefault(); closePlantGuide(); }
+  if (event.key === "ArrowLeft") { event.preventDefault(); changePdfPage(-1); }
+  if (event.key === "ArrowRight") { event.preventDefault(); changePdfPage(1); }
+});
+updateSymptomResults();
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {

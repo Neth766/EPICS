@@ -511,7 +511,7 @@
       </div>
       <div class="symptom-layout">
         <aside class="symptom-filters">
-          <div class="panel-heading">Patient details</div>
+          <div class="panel-heading">Profile details</div>
           <label for="ageRange">Age: <span id="ageValue">28</span></label>
           <input id="ageRange" type="range" min="1" max="100" value="28" oninput="document.getElementById('ageValue').textContent = this.value">
           <div class="form-row">
@@ -520,46 +520,55 @@
             <label><input type="radio" name="sex" value="other"> Other</label>
           </div>
           <div class="symptom-feature-list">
-            <label><input type="checkbox"> Fever</label>
-            <label><input type="checkbox"> Body ache</label>
-            <label><input type="checkbox"> Headache</label>
-            <label><input type="checkbox"> Sore throat</label>
-            <label><input type="checkbox"> Shortness of breath</label>
-            <label><input type="checkbox"> Nausea</label>
+            <label><input type="checkbox" data-symptom="fever"> Fever</label>
+            <label><input type="checkbox" data-symptom="body ache"> Body ache</label>
+            <label><input type="checkbox" data-symptom="headache"> Headache</label>
+            <label><input type="checkbox" data-symptom="sore throat"> Sore throat</label>
+            <label><input type="checkbox" data-symptom="shortness of breath"> Shortness of breath</label>
+            <label><input type="checkbox" data-symptom="nausea"> Nausea</label>
           </div>
-          <div class="panel-note">Use the checkboxes to narrow the symptom search and include demographic details for better guidance.</div>
+          <div class="panel-note">Profile details are retained for future personalization. They do not affect the plant references shown here.</div>
         </aside>
         <aside class="symptom-conditions">
           <div class="panel-heading">Common conditions</div>
           <div class="condition-list">
-            <label><input type="checkbox"> Cold</label>
-            <label><input type="checkbox"> Flu</label>
-            <label><input type="checkbox"> Cough</label>
-            <label><input type="checkbox"> Headache</label>
-            <label><input type="checkbox"> Indigestion</label>
-            <label><input type="checkbox"> Skin irritation</label>
-            <label><input type="checkbox"> Allergy</label>
-            <label><input type="checkbox"> Fatigue</label>
+            <label><input type="checkbox" data-symptom="cold"> Cold</label>
+            <label><input type="checkbox" data-symptom="flu"> Flu</label>
+            <label><input type="checkbox" data-symptom="cough"> Cough</label>
+            <label><input type="checkbox" data-symptom="headache"> Headache</label>
+            <label><input type="checkbox" data-symptom="indigestion"> Indigestion</label>
+            <label><input type="checkbox" data-symptom="skin irritation"> Skin irritation</label>
+            <label><input type="checkbox" data-symptom="allergy"> Allergy</label>
+            <label><input type="checkbox" data-symptom="fatigue"> Fatigue</label>
           </div>
           <div class="panel-note">Tap a condition to quickly explore plant references related to that issue.</div>
         </aside>
       </div>
-      <div class="recommendation" id="symptomResult">Choose one or more symptoms to see educational plant matches.</div>
-      <div class="presentation-shell">
-        <div class="presentation-toolbar">
-          <div>
-            <h3 id="deckTitle">Plant presentation deck</h3>
-          </div>
-          <div class="deck-controls">
-            <button class="secondary-button" id="prevSlide">Previous</button>
-            <span id="slideCounter">1 / 5</span>
-            <button class="primary-button" id="nextSlide">Next</button>
-          </div>
-        </div>
-        <div class="symptom-deck" id="symptomDeck" aria-label="Symptom educational presentation"></div>
-        <div class="slide-dots" id="slideDots" aria-label="Slide navigation"></div>
-      </div>
+      <div class="recommendation" id="symptomResult" role="status">Choose one or more symptoms to see educational plant references.</div>
+      <div class="symptom-results" id="symptomResults" aria-live="polite"></div>
     </section>
+
+    <dialog class="plant-guide-modal" id="plantGuideModal" aria-labelledby="guideTitle">
+      <div class="guide-modal-shell">
+        <div class="guide-modal-header">
+          <div>
+            <span class="section-kicker">Traditional plant guide</span>
+            <h2 id="guideTitle">Plant guide</h2>
+          </div>
+          <button class="guide-close" id="closePlantGuide" type="button" aria-label="Close plant guide">×</button>
+        </div>
+        <div class="guide-viewer" id="guideViewer">
+          <div class="guide-loading" id="guideLoading"><span class="guide-spinner" aria-hidden="true"></span><span>Loading guide…</span></div>
+          <iframe id="plantGuideFrame" title="Plant guide PDF" loading="lazy"></iframe>
+          <div class="guide-error" id="guideError" hidden>This plant guide could not be loaded right now.<br>Please try again.</div>
+        </div>
+        <div class="guide-navigation">
+          <button class="secondary-button" id="previousPdfPage" type="button" aria-label="Previous page">← <span>Previous</span></button>
+          <span id="pdfPageCounter" aria-live="polite">1 / 3</span>
+          <button class="primary-button" id="nextPdfPage" type="button" aria-label="Next page"><span>Next</span> →</button>
+        </div>
+      </div>
+    </dialog>
 
     <section class="split-section page" id="garden" data-page="garden">
       <div class="garden-map reveal">

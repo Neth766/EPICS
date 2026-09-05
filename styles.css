@@ -870,6 +870,65 @@ label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }
 .chip-cloud { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 28px 0; }
 .chip-cloud button.active { color: white; border-color: var(--primary); background: var(--primary); }
 .recommendation { max-width: 760px; margin: auto; padding: 22px; border: 1px dashed var(--primary-2); border-radius: var(--radius); background: var(--surface); color: #d8efe0; }
+.symptom-results {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 1180px;
+  margin: 28px auto 0;
+  text-align: left;
+}
+.symptom-result-card {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgba(80, 160, 110, .26);
+  border-radius: var(--radius);
+  background: rgba(10, 35, 24, .82);
+  color: #d8efe0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .18);
+  animation: symptomCardIn 420ms cubic-bezier(.2, .75, .25, 1) both;
+  animation-delay: calc(var(--card-index, 0) * 80ms);
+}
+.symptom-result-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: rgba(47, 156, 104, .15); }
+.symptom-result-card__body { display: grid; gap: 12px; padding: 17px; }
+.symptom-result-card h3 { margin: 0; color: #f0faf3; }
+.symptom-result-card .latin { margin: -7px 0 0; font-size: .92rem; }
+.symptom-result-card p { margin: 0; color: rgba(216, 239, 224, .82); line-height: 1.55; }
+.symptom-result-card h4 { margin: 2px 0 -4px; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: #8cf0bf; }
+.symptom-match-list, .safety-list { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; list-style: none; }
+.symptom-match-list li { padding: 4px 9px; border-radius: 999px; background: rgba(47, 156, 104, .2); color: #a9f3ca; font-size: .8rem; font-weight: 700; }
+.safety-list { display: grid; gap: 4px; color: rgba(216, 239, 224, .72); font-size: .84rem; }
+.safety-list li::before { content: "• "; color: var(--accent); }
+.symptom-result-card .primary-button { margin-top: 3px; }
+.symptom-empty { grid-column: 1 / -1; padding: 28px; border: 1px dashed rgba(80, 160, 110, .45); border-radius: var(--radius); color: #d8efe0; background: rgba(12, 38, 26, .56); text-align: center; }
+
+.plant-guide-modal { width: min(1120px, 95vw); max-width: 95vw; max-height: 92vh; padding: 0; border: 0; border-radius: calc(var(--radius) + 4px); background: transparent; color: #d8efe0; }
+.plant-guide-modal::backdrop { background: rgba(4, 17, 10, .76); animation: guideOverlayIn 250ms ease-out both; }
+.guide-modal-shell { display: grid; gap: 14px; padding: clamp(14px, 2.2vw, 24px); border: 1px solid rgba(80, 160, 110, .32); border-radius: calc(var(--radius) + 4px); background: #102b1c; box-shadow: 0 28px 90px rgba(0,0,0,.48); animation: guideModalIn 300ms cubic-bezier(.2,.8,.2,1) both; }
+.guide-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.guide-modal-header h2 { margin: 5px 0 0; color: #f0faf3; font-size: clamp(1.25rem, 3vw, 1.8rem); }
+.guide-close { display: inline-grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; color: white; background: rgba(255,255,255,.08); font-size: 1.8rem; line-height: 1; cursor: pointer; }
+.guide-viewer { position: relative; display: grid; min-height: min(62vh, 640px); max-height: 72vh; overflow: hidden; isolation: isolate; border-radius: var(--radius); background: #07150d; }
+.guide-viewer::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 42%, rgba(93, 207, 147, .16), transparent 48%), linear-gradient(110deg, transparent 32%, rgba(255,255,255,.08) 50%, transparent 68%); transition: opacity 220ms ease; }
+.guide-viewer iframe { width: 100%; height: 100%; min-height: min(62vh, 640px); border: 0; opacity: 0; transform: scale(.985) translateX(-8px); transition: opacity 240ms ease, transform 280ms cubic-bezier(.2,.8,.2,1), filter 240ms ease; }
+.guide-viewer.is-ready iframe { opacity: 1; }
+.guide-viewer.is-ready iframe { transform: scale(1) translateX(0); filter: brightness(1); }
+.guide-viewer.is-loading::before { opacity: 1; animation: guideSheen 700ms ease-out both; }
+.guide-viewer.is-loading iframe { opacity: .18; filter: brightness(.7); }
+.guide-loading, .guide-error { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 12px; color: #d8efe0; text-align: center; z-index: 1; }
+.guide-loading { background: #07150d; }
+.guide-viewer.is-ready .guide-loading { display: none; }
+.guide-spinner { width: 30px; height: 30px; border: 3px solid rgba(140,240,191,.28); border-top-color: #8cf0bf; border-radius: 50%; animation: guideSpin 700ms linear infinite; }
+.guide-navigation { display: flex; justify-content: center; align-items: center; gap: 14px; }
+#pdfPageCounter { min-width: 52px; text-align: center; font-weight: 800; }
+.guide-navigation button:disabled { opacity: .48; cursor: not-allowed; }
+.guide-page-transition iframe { animation: guidePageIn 280ms cubic-bezier(.2,.8,.2,1) both; }
+@keyframes symptomCardIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes guideOverlayIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes guideModalIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
+@keyframes guidePageIn { from { opacity: .18; transform: translateX(18px) scale(.988); } to { opacity: 1; transform: translateX(0) scale(1); } }
+@keyframes guideSheen { from { background-position: -260px 0, 0 0; } to { background-position: 620px 0, 0 0; } }
+@keyframes guideSpin { to { transform: rotate(360deg); } }
 .presentation-shell {
   max-width: 1280px;
   margin: 32px auto 0;
@@ -1219,6 +1278,13 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
   .ambient-bg::after {
     animation: none;
   }
+  .symptom-result-card,
+  .plant-guide-modal::backdrop,
+  .guide-modal-shell,
+  .guide-page-transition iframe,
+  .guide-viewer.is-loading::before,
+  .guide-spinner { animation: none; }
+  .guide-viewer iframe { transition: none; }
 }
 
 @media (max-width: 1100px) {
@@ -1235,7 +1301,7 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
   .brand small { display: none; }
   .hero h1 { font-size: 2.45rem; }
   .hero-panel { transform: none; }
-  .metric-strip, .journey-strip, .plant-grid, .category-grid, .dashboard-grid, .analytics-grid, .database-map, .support-grid, .info-grid { grid-template-columns: 1fr; }
+  .metric-strip, .journey-strip, .plant-grid, .category-grid, .dashboard-grid, .analytics-grid, .database-map, .support-grid, .info-grid, .symptom-results { grid-template-columns: 1fr; }
   .panel-header, footer, .garden-tools, .form-row { flex-direction: column; align-items: stretch; }
   .list .plant-card { grid-template-columns: 1fr; }
   .featured-card, .featured-card img, .garden-map { min-height: 330px; }
@@ -1244,6 +1310,11 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
   .presentation-toolbar { display: grid; }
   .deck-slide, .symptom-deck, .deck-media { min-height: auto; }
   .deck-media { min-height: 300px; }
+  .plant-guide-modal { width: 95vw; max-height: 95vh; }
+  .guide-modal-shell { gap: 10px; padding: 14px; }
+  .guide-viewer, .guide-viewer iframe { min-height: min(68vh, 580px); max-height: 72vh; }
+  .guide-navigation { gap: 9px; }
+  .guide-navigation button { min-height: 44px; }
 }
 
 .brand.logo-only {
