@@ -912,12 +912,13 @@ label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }
 
 .plant-guide-modal { width: min(1240px, 96vw); max-width: 96vw; max-height: 96vh; padding: 0; border: 0; border-radius: calc(var(--radius) + 4px); background: transparent; color: #d8efe0; }
 .plant-guide-modal::backdrop { background: rgba(4, 17, 10, .76); animation: guideOverlayIn 250ms ease-out both; }
-.guide-modal-shell { display: grid; gap: 14px; padding: clamp(14px, 2.2vw, 24px); border: 1px solid rgba(80, 160, 110, .32); border-radius: calc(var(--radius) + 4px); background: #102b1c; box-shadow: 0 28px 90px rgba(0,0,0,.48); animation: guideModalIn 300ms cubic-bezier(.2,.8,.2,1) both; }
+.guide-modal-shell { position: relative; display: grid; gap: 0; padding: 10px; border: 1px solid rgba(80, 160, 110, .32); border-radius: calc(var(--radius) + 4px); background: #102b1c; box-shadow: 0 28px 90px rgba(0,0,0,.48); animation: guideModalIn 300ms cubic-bezier(.2,.8,.2,1) both; }
 .plant-guide-modal.is-closing::backdrop { animation: guideOverlayOut 220ms ease-in both; }
 .plant-guide-modal.is-closing .guide-modal-shell { animation: guideModalOut 220ms cubic-bezier(.4,0,1,1) both; }
 .guide-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .guide-modal-header h2 { margin: 5px 0 0; color: #f0faf3; font-size: clamp(1.25rem, 3vw, 1.8rem); }
-.guide-close { display: inline-grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; color: white; background: rgba(255,255,255,.08); font-size: 1.8rem; line-height: 1; cursor: pointer; }
+.guide-close { position: absolute; top: 18px; right: 18px; z-index: 5; display: inline-grid; place-items: center; width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.24); border-radius: 50%; color: white; background: rgba(4, 17, 10, .72); font-size: 1.7rem; line-height: 1; cursor: pointer; transition: background 180ms ease, transform 180ms ease; }
+.guide-close:hover { background: rgba(47, 156, 104, .85); transform: rotate(90deg); }
 .guide-viewer { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; min-height: min(76vh, 780px); max-height: 82vh; overflow: hidden; isolation: isolate; border-radius: var(--radius); background: #07150d; }
 .guide-viewer::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 42%, rgba(93, 207, 147, .16), transparent 48%), linear-gradient(110deg, transparent 32%, rgba(255,255,255,.08) 50%, transparent 68%); background-size: 100% 100%, 260px 100%; background-repeat: no-repeat; transition: opacity 220ms ease; }
 .guide-viewer::after { content: ""; position: absolute; inset: 10%; z-index: 0; pointer-events: none; border: 1px solid rgba(140, 240, 191, .16); border-radius: calc(var(--radius) - 2px); opacity: 0; transform: scale(.96); }
@@ -1228,7 +1229,6 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
   backdrop-filter: blur(20px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
-}
 .mobile-menu.open { display: grid; gap: 8px; }
 .mobile-menu a { padding: 12px; border-radius: var(--radius); background: var(--sage); }
 .mobile-menu a.active-link { outline: 2px solid rgba(47, 156, 104, 0.28); }
@@ -1246,7 +1246,6 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
   background: rgba(10, 35, 24, 0.9);
   box-shadow: 0 16px 48px rgba(0,0,0,0.35);
   backdrop-filter: blur(24px);
-}
   z-index: 30;
 }
 .modal::backdrop { background: rgba(9, 21, 14, 0.55); backdrop-filter: blur(8px); }

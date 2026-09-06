@@ -1344,7 +1344,6 @@ const guideViewer = document.querySelector("#guideViewer");
 const guideFrame = document.querySelector("#plantGuideFrame");
 const guideLoading = document.querySelector("#guideLoading");
 const guideError = document.querySelector("#guideError");
-const guideTitle = document.querySelector("#guideTitle");
 const pdfPageCounter = document.querySelector("#pdfPageCounter");
 let activeGuidePlant = null;
 let activePdfPage = 1;
@@ -1446,7 +1445,6 @@ function openPlantGuide(plant) {
   if (!plant?.pdf || !plantGuideModal) return;
   activeGuidePlant = plant;
   activePdfPage = 1;
-  guideTitle.textContent = `${plant.name} guide`;
   clearTimeout(guideCloseTimer);
   plantGuideModal.classList.remove("is-closing");
   if (!plantGuideModal.open) plantGuideModal.showModal();

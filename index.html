@@ -545,15 +545,9 @@
       <div class="symptom-results" id="symptomResults" aria-live="polite"></div>
     </section>
 
-    <dialog class="plant-guide-modal" id="plantGuideModal" aria-labelledby="guideTitle">
+    <dialog class="plant-guide-modal" id="plantGuideModal" aria-label="Plant guide PDF">
       <div class="guide-modal-shell">
-        <div class="guide-modal-header">
-          <div>
-            <span class="section-kicker">Traditional plant guide</span>
-            <h2 id="guideTitle">Plant guide</h2>
-          </div>
-          <button class="guide-close" id="closePlantGuide" type="button" aria-label="Close plant guide">×</button>
-        </div>
+        <button class="guide-close" id="closePlantGuide" type="button" aria-label="Close plant guide">×</button>
         <div class="guide-viewer" id="guideViewer">
           <div class="guide-loading" id="guideLoading"><span class="guide-spinner" aria-hidden="true"></span><span>Loading guide…</span></div>
           <iframe id="plantGuideFrame" title="Plant guide PDF" loading="lazy"></iframe>
