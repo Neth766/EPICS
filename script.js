@@ -188,7 +188,7 @@ function initAnimatedBackground() {
 
   function seed() {
     const area = state.width * state.height;
-    const networkCount = state.reduced ? 52 : Math.min(lowPower ? 80 : 120, Math.max(42, Math.floor(area / (lowPower ? 11000 : 7000))));
+    const networkCount = state.reduced ? 52 : Math.min(lowPower ? 90 : 135, Math.max(42, Math.floor(area / (lowPower ? 9800 : 6200))));
     const pollenCount = state.reduced ? 140 : Math.min(lowPower ? 850 : 1500, Math.max(220, Math.floor(area / (lowPower ? 1900 : 900))));
     const glowCount = state.reduced ? 5 : lowPower ? 8 : 12;
 
