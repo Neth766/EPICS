@@ -9,7 +9,7 @@ const plants = [
     family: "Lamiaceae",
     uses: "Sacred adaptogenic herb for immunity, respiratory health, stress relief, and digestive support. Rich in eugenol.",
     tags: ["Immunity", "Respiratory", "Adaptogen", "Sacred", "Digestive"],
-    image: "assets/plants/Tulsi/tulsi_page.jpg"
+image: "assets/plants/Tulsi/Tulsi_or_Tulasi_Holy_basil.jpg"
   },
   {
     name: "Turmeric",
@@ -760,7 +760,7 @@ const sampleImages = {
 const slideImages = {
   aloeVera: "assets/plants/Aloe Vera/Green Minimalist Gardening and Planting Business Presentation conv 1.png?v=2",
   neem: "assets/plants/Neem/Green Playful Photosynthesis Group Project Presentation conv 1.png",
-  tulsi: "assets/plants/Tulsi/tulsi_page.jpg"
+  tulsi: "assets/plants/Tulsi/Tulsi_or_Tulasi_Holy_basil.jpg"
 };
 
 const symptomGuides = {
@@ -1140,39 +1140,75 @@ document.querySelectorAll("#mobileMenu a").forEach((link) => {
 const plantMappings = [
   {
     id: "tulsi", name: "Tulsi", scientificName: "Ocimum tenuiflorum",
-    symptoms: ["cough", "cold", "sore throat", "fever"],
+    symptoms: ["cough", "cold", "sore throat"],
     traditionalUses: ["Traditionally referenced in South Asian respiratory-comfort preparations."],
     evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
     ageGroups: ["child", "adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Tea", "Infusion"],
     description: "A widely documented medicinal plant with a long history in South Asian traditional knowledge.",
-    image: null, pdf: "assets/plants/Tulsi/Tulsi.pdf", pageCount: 3
+    image: "assets/plants/Tulsi/Tulsi_or_Tulasi_Holy_basil.jpg", pdf: "assets/plants/Tulsi/Tulsi.pdf", pageCount: 3
   },
   {
     id: "kalmegh", name: "Kalmegh", scientificName: "Andrographis paniculata",
-    symptoms: ["cold", "flu", "fever", "sore throat"],
+    symptoms: ["fever", "flu"],
     traditionalUses: ["Traditionally included in regional herbal knowledge and plant-learning materials."],
     evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Individual suitability can vary; seek professional advice when appropriate."],
     ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Infusion"],
     description: "A medicinal plant documented in traditional knowledge systems and community learning resources.",
-    image: null, pdf: "assets/plants/Kalmegh/Kalmegh.pdf", pageCount: 3
+    image: "assets/plants/Kalmegh/Andrographis_paniculata_(Kalpa)_in_Narshapur_forest,_AP_W2_IMG_0867.jpg", pdf: "assets/plants/Kalmegh/Kalmegh.pdf", pageCount: 3
   },
   {
     id: "punarnava", name: "Punarnava", scientificName: "Boerhavia diffusa",
-    symptoms: ["fatigue", "body ache", "indigestion"],
+    symptoms: ["fatigue", "body ache"],
     traditionalUses: ["Traditionally discussed in plant knowledge records for general wellness contexts."],
     evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
     ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Decoction", "Infusion"],
     description: "A plant featured in traditional medicinal-plant documentation and educational reference material.",
-    image: null, pdf: "assets/plants/Punarnava/Punarnava.pdf", pageCount: 3
+    image: "assets/plants/Punarnava/पुनर्नवा_फुले.jpg", pdf: "assets/plants/Punarnava/Punarnava.pdf", pageCount: 3
   },
   {
     id: "bhringraj", name: "Bhringraj", scientificName: "Eclipta prostrata",
-    symptoms: ["headache", "fatigue", "body ache"],
+    symptoms: ["headache"],
     traditionalUses: ["Traditionally valued in regional medicinal-plant knowledge and preparation practices."],
     evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
     ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Oil preparation", "Infusion"],
     description: "A medicinal plant represented in traditional knowledge and educational plant guides.",
-    image: null, pdf: "assets/plants/Bhringraj/Bhringraj.pdf", pageCount: 3
+    image: "assets/plants/Bhringraj/Eclipta_prostrata_in_AP_W2_IMG_9785.jpg", pdf: "assets/plants/Bhringraj/Bhringraj.pdf", pageCount: 3
+  },
+  {
+    id: "apamarga", name: "Apamarga", scientificName: "Achyranthes aspera",
+    symptoms: ["headache", "body ache"],
+    traditionalUses: ["Traditionally documented in regional medicinal-plant knowledge and community learning resources."],
+    evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
+    ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Infusion", "Decoction"],
+    description: "A plant represented in traditional medicinal-plant knowledge and educational guide material.",
+    image: "assets/plants/Apamarga/Achyranthes_aspera_at_Kadavoor.jpg", pdf: "assets/plants/Apamarga/Apamarga.pdf", pageCount: 3
+  },
+  {
+    id: "chirata", name: "Chirata", scientificName: "Swertia perennis",
+    symptoms: ["indigestion", "fever"],
+    traditionalUses: ["Traditionally included in plant knowledge records and regional herbal-learning contexts."],
+    evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
+    ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Infusion", "Decoction"],
+    description: "A medicinal plant featured in traditional knowledge and educational plant guides.",
+    image: "assets/plants/Chirata/Swertia_perennis_230705.jpg", pdf: "assets/plants/Chirata/Chirata.pdf", pageCount: 3
+  },
+  {
+    id: "guduchi-giloy", name: "Guduchi (Giloy)", scientificName: "Tinospora cordifolia",
+    symptoms: ["fatigue", "body ache"],
+    traditionalUses: ["Traditionally referenced in South Asian medicinal-plant knowledge and wellness learning materials."],
+    evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
+    ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Decoction", "Infusion"],
+    description: "A climbing medicinal plant with a long history in traditional knowledge systems.",
+    image: "assets/plants/Guduchi (or) Giloy/Tinospora_cordifolia.jpg", pdf: "assets/plants/Guduchi (or) Giloy/Guduchi (or) Giloy.pdf", pageCount: 3
+  },
+  {
+    id: "vasaka", name: "Vasaka", scientificName: "Justicia adhatoda",
+    symptoms: ["cough", "sore throat", "shortness of breath"],
+    traditionalUses: ["Traditionally associated with respiratory-focused medicinal-plant knowledge."],
+    evidenceLevel: "Traditional knowledge", safetyInformation: ["Educational information only.", "Consult a qualified healthcare professional when appropriate."],
+    ageGroups: ["adult", "elderly"], genders: ["female", "male", "other"], preparationMethods: ["Infusion", "Decoction"],
+    description: "A medicinal plant commonly documented in traditional South Asian plant knowledge.",
+    image: "assets/plants/Vasaka/Justicia_adhatoda_1.jpg", pdf: "assets/plants/Vasaka/Vasaka.pdf", pageCount: 3
   }
 ];
 
@@ -1188,8 +1224,9 @@ const pdfPageCounter = document.querySelector("#pdfPageCounter");
 let activeGuidePlant = null;
 let activePdfPage = 1;
 let guideLastTrigger = null;
-let guideLoadTimer = null;
 let guideTouchStartX = null;
+let guideRequestId = 0;
+let guideCloseTimer = null;
 
 function getSelectedSymptoms() {
   return [...new Set([...document.querySelectorAll("#symptoms input[data-symptom]:checked")].map((input) => input.dataset.symptom))];
@@ -1243,26 +1280,41 @@ function updatePdfControls() {
   document.querySelector("#nextPdfPage").disabled = activePdfPage >= pageCount;
 }
 
-function loadPdfPage() {
+async function loadPdfPage(direction = "next") {
   if (!activeGuidePlant) return;
+  const requestId = ++guideRequestId;
   guideViewer.classList.remove("is-ready");
   guideViewer.classList.add("is-loading", "guide-page-transition");
+  guideViewer.classList.toggle("page-previous", direction === "previous");
   guideLoading.hidden = false;
   guideError.hidden = true;
-  guideFrame.src = `${encodeURI(activeGuidePlant.pdf)}#page=${activePdfPage}&view=FitH`;
-  clearTimeout(guideLoadTimer);
-  // Native PDF viewers do not consistently dispatch iframe load events. Reveal the
-  // viewer quickly instead of mistaking a successfully rendered PDF for an error.
-  guideLoadTimer = setTimeout(finishGuideLoad, 420);
-  updatePdfControls();
-}
-
-function finishGuideLoad() {
-  clearTimeout(guideLoadTimer);
-  guideLoading.hidden = true;
-  guideViewer.classList.remove("is-loading");
-  guideViewer.classList.add("is-ready");
-  setTimeout(() => guideViewer.classList.remove("guide-page-transition"), 300);
+  try {
+    const guideUrl = encodeURI(activeGuidePlant.pdf);
+    // Verify the local static asset first. The iframe itself has unreliable PDF
+    // load/error events, so it never controls the application's error state.
+    if (location.protocol !== "file:") {
+      const response = await fetch(guideUrl, { method: "HEAD", cache: "no-store" });
+      if (!response.ok) throw new Error(`Guide request returned ${response.status}`);
+    }
+    if (requestId !== guideRequestId) return;
+    updatePdfControls();
+    guideFrame.src = `${guideUrl}#page=${activePdfPage}&view=FitH`;
+    // Give the browser viewer a short, non-blocking transition; native PDF
+    // rendering continues independently and does not emit dependable events.
+    setTimeout(() => {
+      if (requestId !== guideRequestId) return;
+      guideLoading.hidden = true;
+      guideViewer.classList.remove("is-loading");
+      guideViewer.classList.add("is-ready");
+      setTimeout(() => guideViewer.classList.remove("guide-page-transition", "page-previous"), 300);
+    }, 240);
+  } catch (error) {
+    if (requestId !== guideRequestId) return;
+    console.error("Vital Flora: plant guide asset check failed", activeGuidePlant?.pdf, error);
+    guideLoading.hidden = true;
+    guideViewer.classList.remove("is-loading", "is-ready");
+    guideError.hidden = false;
+  }
 }
 
 function openPlantGuide(plant) {
@@ -1270,18 +1322,25 @@ function openPlantGuide(plant) {
   activeGuidePlant = plant;
   activePdfPage = 1;
   guideTitle.textContent = `${plant.name} guide`;
+  clearTimeout(guideCloseTimer);
+  plantGuideModal.classList.remove("is-closing");
   if (!plantGuideModal.open) plantGuideModal.showModal();
-  loadPdfPage();
+  loadPdfPage("next");
   document.querySelector("#closePlantGuide").focus();
 }
 
 function closePlantGuide() {
   if (!plantGuideModal?.open) return;
-  plantGuideModal.close();
-  clearTimeout(guideLoadTimer);
-  guideFrame.removeAttribute("src");
-  activeGuidePlant = null;
-  guideLastTrigger?.focus();
+  ++guideRequestId;
+  if (plantGuideModal.classList.contains("is-closing")) return;
+  plantGuideModal.classList.add("is-closing");
+  guideCloseTimer = setTimeout(() => {
+    plantGuideModal.close();
+    plantGuideModal.classList.remove("is-closing");
+    activeGuidePlant = null;
+    guideFrame.removeAttribute("src");
+    guideLastTrigger?.focus();
+  }, 240);
 }
 
 function changePdfPage(direction) {
@@ -1289,7 +1348,7 @@ function changePdfPage(direction) {
   const nextPage = activePdfPage + direction;
   if (nextPage < 1 || nextPage > activeGuidePlant.pageCount) return;
   activePdfPage = nextPage;
-  loadPdfPage();
+  loadPdfPage(direction < 0 ? "previous" : "next");
 }
 
 document.querySelectorAll("#symptoms input[data-symptom]").forEach((input) => input.addEventListener("change", updateSymptomResults));
@@ -1311,8 +1370,6 @@ symptomResults?.addEventListener("click", (event) => {
 document.querySelector("#closePlantGuide").addEventListener("click", closePlantGuide);
 document.querySelector("#previousPdfPage").addEventListener("click", () => changePdfPage(-1));
 document.querySelector("#nextPdfPage").addEventListener("click", () => changePdfPage(1));
-guideFrame.addEventListener("load", finishGuideLoad);
-guideFrame.addEventListener("error", () => { clearTimeout(guideLoadTimer); guideViewer.classList.remove("is-loading"); console.error("Vital Flora: plant guide failed to load", activeGuidePlant?.pdf); guideLoading.hidden = true; guideError.hidden = false; });
 guideViewer.addEventListener("touchstart", (event) => { guideTouchStartX = event.changedTouches[0]?.clientX ?? null; }, { passive: true });
 guideViewer.addEventListener("touchend", (event) => {
   const endX = event.changedTouches[0]?.clientX;
