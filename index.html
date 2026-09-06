@@ -390,6 +390,9 @@
       <aside class="filter-panel reveal">
         <div class="section-kicker">Plant Search</div>
         <h2>Find by name, symptom, family, or region</h2>
+        <label for="exploreSearch">Search plants
+          <input id="exploreSearch" type="search" placeholder="Try Tulsi, cough, family, or region">
+        </label>
         <label>Search type
           <select id="searchType">
             <option>All fields</option>
@@ -400,21 +403,13 @@
           </select>
         </label>
         <label>Plant family
-          <select>
+          <select id="familyFilter">
             <option>Any family</option>
-            <option>Lamiaceae</option>
-            <option>Zingiberaceae</option>
-            <option>Fabaceae</option>
-            <option>Asphodelaceae</option>
           </select>
         </label>
         <label>Region
-          <select>
+          <select id="regionFilter">
             <option>All regions</option>
-            <option>Western Ghats</option>
-            <option>Himalayan foothills</option>
-            <option>Deccan Plateau</option>
-            <option>Coastal India</option>
           </select>
         </label>
         <label>Sort by
@@ -444,7 +439,7 @@
           </div>
           <div class="panel-actions">
             <button class="secondary-button" id="compareButton">Compare saved</button>
-            <button class="secondary-button" id="quickViewButton">Quick view</button>
+            <button class="secondary-button" id="quickViewButton" type="button">Quick view</button>
           </div>
         </div>
         <div class="plant-grid" id="plantGrid"></div>
@@ -454,30 +449,32 @@
     <section class="detail-section reveal page" id="plant-detail" data-page="explore">
       <div class="plant-detail-card">
         <div class="gallery">
-          <img class="main-plant-image" src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=80" alt="Medicinal plant close up">
+          <img class="main-plant-image" id="detailMainImage" src="assets/plants/Tulsi/Tulsi_or_Tulasi_Holy_basil.jpg" alt="Tulsi plant">
           <div class="thumbs">
-            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=240&q=80" alt="">
-            <img src="https://images.unsplash.com/photo-1615485925600-97237c4fc1ec?auto=format&fit=crop&w=240&q=80" alt="">
-            <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=240&q=80" alt="">
+            <img id="detailThumbOne" src="assets/plants/Tulsi/Tulsi_or_Tulasi_Holy_basil.jpg" alt="Tulsi plant detail">
           </div>
         </div>
         <div class="detail-copy">
           <span class="badge">Plant profile</span>
-          <h2>Turmeric</h2>
-          <p class="latin">Curcuma longa • Zingiberaceae</p>
-          <p>A verified profile with local names, traditional preparation notes, growing conditions, community observations, QR code support, and care notes.</p>
+          <h2 id="detailPlantName">Tulsi</h2>
+          <p class="latin" id="detailPlantScientific">Ocimum tenuiflorum • Lamiaceae</p>
+          <p id="detailPlantDescription">A medicinal plant from the EPICS community plant collection.</p>
           <div class="info-grid">
-            <span><strong>Parts used</strong> Rhizome</span>
-            <span><strong>Category</strong> Skin, wellness</span>
-            <span><strong>Climate</strong> Warm, humid</span>
-            <span><strong>QR</strong> Ready</span>
+            <span><strong>Local name</strong><span id="detailPlantLocalName">Tulasi</span></span>
+            <span><strong>Family</strong><span id="detailPlantFamily">Lamiaceae</span></span>
+            <span><strong>Region</strong><span id="detailPlantRegion">South India</span></span>
+            <span><strong>PDF guide</strong><span id="detailPdfStatus">Available</span></span>
           </div>
-          <div class="care-note">Profiles can include source links, local context, preparation notes, and expert-reviewed care guidance.</div>
+          <div class="care-note" id="detailPlantUses">Traditional plant knowledge for community education and conservation.</div>
           <div class="detail-actions">
-            <button class="primary-button">Download PDF</button>
-            <button class="secondary-button">Bookmark</button>
-            <button class="secondary-button">Share</button>
-            <button class="secondary-button" id="qrButton">Show QR</button>
+            <button class="primary-button" id="downloadPlantPdf" type="button">Download PDF</button>
+            <button class="secondary-button" id="bookmarkPlant" type="button">Bookmark</button>
+            <button class="secondary-button" id="sharePlant" type="button">Share</button>
+            <button class="secondary-button" id="qrButton" type="button">Show QR</button>
+          </div>
+          <div class="qr-panel" id="qrPanel" hidden>
+            <img id="plantQrImage" alt="QR code for this plant guide">
+            <div><strong>Share this plant guide</strong><p>Scan to open this plant's educational PDF.</p><button class="secondary-button" id="removeQrButton" type="button">Remove QR</button></div>
           </div>
         </div>
       </div>

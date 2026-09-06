@@ -1,63 +1,60 @@
-// Temporary frontend seed data. Replace these records with API/database results later;
-// the image fields currently use remote placeholder URLs so no backend is required yet.
 const imageFallback = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%23dfeadd'/%3E%3Cstop offset='1' stop-color='%23176b47'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='800' height='600' fill='url(%23g)'/%3E%3Cpath d='M394 434c-68-68-70-164-3-231 71 63 81 158 3 231Z' fill='%23fff' fill-opacity='.72'/%3E%3Cpath d='M402 430c66-31 108-87 120-165 53 52 53 132 5 179-34 33-80 36-125-14Z' fill='%23fff' fill-opacity='.45'/%3E%3Ctext x='400' y='514' text-anchor='middle' font-family='Inter,Arial' font-size='34' font-weight='700' fill='%23fff'%3EPlant image pending%3C/text%3E%3C/svg%3E";
 
 const plants = [
   {
-    name: "Tulsi",
-    scientific: "Ocimum tenuiflorum",
-    family: "Lamiaceae",
-    uses: "Sacred adaptogenic herb for immunity, respiratory health, stress relief, and digestive support. Rich in eugenol.",
-    tags: ["Immunity", "Respiratory", "Adaptogen", "Sacred", "Digestive"],
-image: "assets/plants/Tulsi/Tulsi_or_Tulasi_Holy_basil.jpg"
+    id: "tulsi", name: "Tulsi", localName: "Tulasi", scientific: "Ocimum tenuiflorum", family: "Lamiaceae", region: "South India",
+    uses: "Sacred adaptogenic herb documented in community education for respiratory comfort, immunity, and digestive support.", tags: ["Immunity", "Respiratory", "Digestive"], symptoms: ["cough", "cold", "sore throat"],
+    image: "assets/plants/Tulsi/Tulsi_or_Tulasi_Holy_basil.jpg", pdf: "assets/plants/Tulsi/Tulsi.pdf", pageCount: 3
   },
   {
-    name: "Turmeric",
-    scientific: "Curcuma longa",
-    family: "Zingiberaceae",
-    uses: "Commonly documented in educational references for skin and wellness preparations.",
-    tags: ["Skin", "Digestive", "Rhizome"],
-    image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=700&q=80"
+    id: "kalmegh", name: "Kalmegh", localName: "Kalmegh", scientific: "Andrographis paniculata", family: "Acanthaceae", region: "Deccan Plateau",
+    uses: "A medicinal plant documented in regional traditional knowledge and plant-learning resources.", tags: ["Fever", "Wellness", "Herb"], symptoms: ["fever", "flu"],
+    image: "assets/plants/Kalmegh/Andrographis_paniculata_(Kalpa)_in_Narshapur_forest,_AP_W2_IMG_0867.jpg", pdf: "assets/plants/Kalmegh/Kalmegh.pdf", pageCount: 3
   },
   {
-    name: "Aloe Vera",
-    scientific: "Aloe barbadensis miller",
-    family: "Asphodelaceae",
-    uses: "Popular traditional external-use plant with clear care notes.",
-    tags: ["Skin", "Succulent", "Home garden"],
-    image: "assets/plants/Aloe Vera/Green Minimalist Gardening and Planting Business Presentation conv 1.png?v=2"
+    id: "punarnava", name: "Punarnava", localName: "Punarnava", scientific: "Boerhavia diffusa", family: "Nyctaginaceae", region: "Western Ghats",
+    uses: "A plant featured in traditional medicinal-plant documentation and general wellness learning.", tags: ["Wellness", "Body ache", "Herb"], symptoms: ["fatigue", "body ache"],
+    image: "assets/plants/Punarnava/पुनर्नवा_फुले.jpg", pdf: "assets/plants/Punarnava/Punarnava.pdf", pageCount: 3
   },
   {
-    name: "Neem",
-    scientific: "Azadirachta indica",
-    family: "Meliaceae",
-    uses: "Widely recognized in conservation and traditional plant knowledge.",
-    tags: ["Skin", "Tree", "Conservation"],
-    image: "assets/plants/Neem/Green Playful Photosynthesis Group Project Presentation conv 1.png"
+    id: "bhringraj", name: "Bhringraj", localName: "Bhringraj", scientific: "Eclipta prostrata", family: "Asteraceae", region: "Coastal India",
+    uses: "A medicinal plant represented in regional knowledge and educational preparation practices.", tags: ["Headache", "Oil preparation", "Herb"], symptoms: ["headache"],
+    image: "assets/plants/Bhringraj/Eclipta_prostrata_in_AP_W2_IMG_9785.jpg", pdf: "assets/plants/Bhringraj/Bhringraj.pdf", pageCount: 3
   },
   {
-    name: "Ginger",
-    scientific: "Zingiber officinale",
-    family: "Zingiberaceae",
-    uses: "Educationally associated with digestion and seasonal comfort.",
-    tags: ["Digestive", "Respiratory", "Rhizome"],
-    image: "https://images.unsplash.com/photo-1615485500704-8e990f9900e1?auto=format&fit=crop&w=700&q=80"
+    id: "apamarga", name: "Apamarga", localName: "Apamargam", scientific: "Achyranthes aspera", family: "Amaranthaceae", region: "Deccan Plateau",
+    uses: "A plant represented in regional medicinal-plant knowledge and community learning resources.", tags: ["Headache", "Body ache", "Infusion"], symptoms: ["headache", "body ache"],
+    image: "assets/plants/Apamarga/Achyranthes_aspera_at_Kadavoor.jpg", pdf: "assets/plants/Apamarga/Apamarga.pdf", pageCount: 3
   },
   {
-    name: "Ashwagandha",
-    scientific: "Withania somnifera",
-    family: "Solanaceae",
-    uses: "Referenced in learning modules for wellness and cultivation.",
-    tags: ["Wellness", "Root", "Course"],
-    image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=700&q=80"
+    id: "chirata", name: "Chirata", localName: "Chirata", scientific: "Swertia perennis", family: "Gentianaceae", region: "Himalayan foothills",
+    uses: "A medicinal plant featured in traditional knowledge and regional educational plant guides.", tags: ["Indigestion", "Fever", "Decoction"], symptoms: ["indigestion", "fever"],
+    image: "assets/plants/Chirata/Swertia_perennis_230705.jpg", pdf: "assets/plants/Chirata/Chirata.pdf", pageCount: 3
+  },
+  {
+    id: "guduchi-giloy", name: "Guduchi (Giloy)", localName: "Giloy", scientific: "Tinospora cordifolia", family: "Menispermaceae", region: "Western Ghats",
+    uses: "A climbing medicinal plant with a long history in traditional knowledge and wellness learning.", tags: ["Wellness", "Body ache", "Climber"], symptoms: ["fatigue", "body ache"],
+    image: "assets/plants/Guduchi (or) Giloy/Tinospora_cordifolia.jpg", pdf: "assets/plants/Guduchi (or) Giloy/Guduchi (or) Giloy.pdf", pageCount: 3
+  },
+  {
+    id: "vasaka", name: "Vasaka", localName: "Adhatoda", scientific: "Justicia adhatoda", family: "Acanthaceae", region: "South India",
+    uses: "A medicinal plant commonly documented in traditional respiratory-focused plant knowledge.", tags: ["Cough", "Respiratory", "Decoction"], symptoms: ["cough", "sore throat", "shortness of breath"],
+    image: "assets/plants/Vasaka/Justicia_adhatoda_1.jpg", pdf: "assets/plants/Vasaka/Vasaka.pdf", pageCount: 3
   }
 ];
 
 const plantGrid = document.querySelector("#plantGrid");
 const toast = document.querySelector("#toast");
-const search = document.querySelector("#globalSearch");
+const globalSearch = document.querySelector("#globalSearch");
+const exploreSearch = document.querySelector("#exploreSearch");
+const search = exploreSearch || globalSearch;
+const searchInputs = [globalSearch, exploreSearch].filter(Boolean);
 const splash = document.querySelector("#splash");
 const smartAssist = document.querySelector("#smartAssist");
+const searchType = document.querySelector("#searchType");
+const familyFilter = document.querySelector("#familyFilter");
+const regionFilter = document.querySelector("#regionFilter");
+const sortSelect = document.querySelector("#sortSelect");
 const symptomSearch = document.querySelector("#symptomSearch");
 const symptomDeck = document.querySelector("#symptomDeck");
 const deckTitle = document.querySelector("#deckTitle");
@@ -65,6 +62,18 @@ const slideCounter = document.querySelector("#slideCounter");
 const slideDots = document.querySelector("#slideDots");
 let currentSlides = [];
 let currentSlideIndex = 0;
+let selectedExplorePlant = plants[0];
+const detailMainImage = document.querySelector("#detailMainImage");
+const detailThumbOne = document.querySelector("#detailThumbOne");
+const detailPlantName = document.querySelector("#detailPlantName");
+const detailPlantScientific = document.querySelector("#detailPlantScientific");
+const detailPlantDescription = document.querySelector("#detailPlantDescription");
+const detailPlantLocalName = document.querySelector("#detailPlantLocalName");
+const detailPlantFamily = document.querySelector("#detailPlantFamily");
+const detailPlantRegion = document.querySelector("#detailPlantRegion");
+const detailPlantUses = document.querySelector("#detailPlantUses");
+const qrPanel = document.querySelector("#qrPanel");
+const plantQrImage = document.querySelector("#plantQrImage");
 
 function initAnimatedBackground() {
   const canvas = document.querySelector("#livingForestCanvas");
@@ -846,8 +855,9 @@ const symptomGuides = {
 };
 
 function renderPlants(items = plants) {
-  plantGrid.innerHTML = items.map((plant) => `
-    <article class="plant-card">
+  if (!plantGrid) return;
+  plantGrid.innerHTML = items.length ? items.map((plant, index) => `
+    <article class="plant-card" style="--card-index:${index}" data-plant-id="${plant.id}">
       <img loading="lazy" src="${plant.image || imageFallback}" alt="${plant.name} plant">
       <div class="plant-body">
         <span class="badge">${plant.family}</span>
@@ -856,13 +866,76 @@ function renderPlants(items = plants) {
         <p>${plant.uses}</p>
         <div class="tag-row">${plant.tags.map((tag) => `<span>${tag}</span>`).join("")}</div>
         <div class="card-actions">
-          <button class="secondary-button quick-view">Quick view</button>
-          <button class="primary-button favourite">Save</button>
+          <button class="secondary-button quick-view" type="button" data-plant-id="${plant.id}">Quick view</button>
+          <button class="primary-button favourite" type="button" data-plant-id="${plant.id}">${isPlantBookmarked(plant.id) ? "Saved" : "Bookmark"}</button>
         </div>
       </div>
     </article>
-  `).join("");
+  `).join("") : `<div class="plant-empty">No plant records match these filters. Try a broader search.</div>`;
   attachImageFallbacks(plantGrid);
+}
+
+function isPlantBookmarked(plantId) {
+  return JSON.parse(localStorage.getItem("epics-bookmarks") || "[]").includes(plantId);
+}
+
+function setDetailPlant(plant) {
+  if (!plant) return;
+  selectedExplorePlant = plant;
+  detailMainImage.src = plant.image || imageFallback;
+  detailMainImage.alt = `${plant.name} plant`;
+  detailThumbOne.src = plant.image || imageFallback;
+  detailThumbOne.alt = `${plant.name} plant detail`;
+  detailPlantName.textContent = plant.name;
+  detailPlantScientific.textContent = `${plant.scientific} • ${plant.family}`;
+  detailPlantDescription.textContent = `${plant.name} is part of the EPICS community plant collection.`;
+  detailPlantLocalName.textContent = plant.localName;
+  detailPlantFamily.textContent = plant.family;
+  detailPlantRegion.textContent = plant.region;
+  detailPlantUses.textContent = plant.uses;
+  qrPanel.hidden = true;
+  plantQrImage.removeAttribute("src");
+  document.querySelector("#bookmarkPlant").textContent = isPlantBookmarked(plant.id) ? "Bookmarked" : "Bookmark";
+  attachImageFallbacks(document.querySelector("#plant-detail"));
+}
+
+function showPlantDetails(plant, openPdf = false) {
+  if (!plant) return;
+  setDetailPlant(plant);
+  showPage("explore");
+  setTimeout(() => document.querySelector("#plant-detail")?.scrollIntoView({ behavior: document.body.classList.contains("reduce-motion") ? "auto" : "smooth", block: "start" }), 120);
+  if (openPdf) openPlantGuide(plant);
+}
+
+function getExploreMatches(term = "") {
+  const normalizedTerm = term.toLowerCase().trim();
+  const type = searchType?.value || "All fields";
+  const family = familyFilter?.value || "Any family";
+  const region = regionFilter?.value || "All regions";
+  const fields = {
+    "Plant name": (plant) => [plant.name],
+    "Scientific name": (plant) => [plant.scientific],
+    "Local name": (plant) => [plant.localName],
+    Symptom: (plant) => [...plant.symptoms, ...plant.tags],
+    "All fields": (plant) => [plant.name, plant.localName, plant.scientific, plant.family, plant.region, plant.uses, ...plant.symptoms, ...plant.tags]
+  };
+  return plants.filter((plant) => {
+    const matchesTerm = !normalizedTerm || fields[type](plant).join(" ").toLowerCase().includes(normalizedTerm);
+    return matchesTerm && (family === "Any family" || plant.family === family) && (region === "All regions" || plant.region === region);
+  });
+}
+
+function applyExploreFilters() {
+  const term = exploreSearch?.value || globalSearch?.value || "";
+  const matches = getExploreMatches(term);
+  const sort = sortSelect?.value || "Most viewed";
+  if (sort === "A to Z") matches.sort((a, b) => a.name.localeCompare(b.name));
+  if (sort === "Recently added") matches.reverse();
+  if (sort === "Most saved") matches.sort((a, b) => Number(isPlantBookmarked(b.id)) - Number(isPlantBookmarked(a.id)));
+  renderPlants(matches);
+  if (smartAssist) smartAssist.textContent = term || familyFilter?.value !== "Any family" || regionFilter?.value !== "All regions"
+    ? `${matches.length} plant record${matches.length === 1 ? "" : "s"} found in the EPICS collection.`
+    : "Explore all plant records from the local EPICS collection.";
 }
 
 function showToast(message) {
@@ -971,29 +1044,31 @@ if (document.readyState === "loading") {
   initializePage();
 }
 
+if (familyFilter) {
+  [...new Set(plants.map((plant) => plant.family).sort())].forEach((family) => familyFilter.insertAdjacentHTML("beforeend", `<option>${family}</option>`));
+}
+if (regionFilter) {
+  [...new Set(plants.map((plant) => plant.region).sort())].forEach((region) => regionFilter.insertAdjacentHTML("beforeend", `<option>${region}</option>`));
+}
 renderPlants();
+setDetailPlant(selectedExplorePlant);
 
 const searchShell = document.querySelector(".search-shell");
 
-search.addEventListener("focus", () => {
+searchInputs.forEach((searchInput) => searchInput.addEventListener("focus", () => {
   searchShell?.classList.add("focused");
-});
+}));
 
-search.addEventListener("blur", () => {
+searchInputs.forEach((searchInput) => searchInput.addEventListener("blur", () => {
   searchShell?.classList.remove("focused");
-});
+}));
 
-search.addEventListener("input", (event) => {
+searchInputs.forEach((searchInput) => searchInput.addEventListener("input", (event) => {
   const term = event.target.value.toLowerCase().trim();
-  const filtered = plants.filter((plant) =>
-    [plant.name, plant.scientific, plant.family, plant.uses, ...plant.tags].join(" ").toLowerCase().includes(term)
-  );
-  renderPlants(filtered.length || term ? filtered : plants);
-  smartAssist.textContent = term
-    ? filtered.length
-      ? `Found ${filtered.length} educational match${filtered.length === 1 ? "" : "es"}. Try filtering by region, family, or category next.`
-      : "No exact match yet. Try a local name, plant family, or broader symptom like cough or digestion."
-    : "Smart suggestions will appear as you search.";
+  if (exploreSearch && event.target === globalSearch) exploreSearch.value = event.target.value;
+  if (globalSearch && event.target === exploreSearch) globalSearch.value = event.target.value;
+  applyExploreFilters();
+  const filtered = getExploreMatches(term);
   if (plantMappings?.some((plant) => plant.symptoms.includes(term))) {
     location.hash = "symptoms";
     symptomSearch.value = term;
@@ -1001,9 +1076,13 @@ search.addEventListener("input", (event) => {
     if (checkbox) checkbox.checked = true;
     updateSymptomResults();
   }
-});
+}));
+
+[searchType, familyFilter, regionFilter, sortSelect].forEach((control) => control?.addEventListener("change", applyExploreFilters));
 
 document.addEventListener("click", (event) => {
+  const plantId = event.target.closest("[data-plant-id]")?.dataset.plantId;
+  const clickedPlant = plants.find((plant) => plant.id === plantId);
   const modalId = event.target.closest("[data-open-modal]")?.dataset.openModal;
   if (modalId) {
     event.preventDefault();
@@ -1012,7 +1091,16 @@ document.addEventListener("click", (event) => {
   }
 
   if (event.target.matches(".favourite")) {
-    showToast("Saved to favourites");
+    if (clickedPlant) {
+      const bookmarks = JSON.parse(localStorage.getItem("epics-bookmarks") || "[]");
+      const nextBookmarks = bookmarks.includes(clickedPlant.id)
+        ? bookmarks.filter((id) => id !== clickedPlant.id)
+        : [...bookmarks, clickedPlant.id];
+      localStorage.setItem("epics-bookmarks", JSON.stringify(nextBookmarks));
+      event.target.textContent = nextBookmarks.includes(clickedPlant.id) ? "Saved" : "Bookmark";
+      if (selectedExplorePlant.id === clickedPlant.id) document.querySelector("#bookmarkPlant").textContent = nextBookmarks.includes(clickedPlant.id) ? "Bookmarked" : "Bookmark";
+      showToast(nextBookmarks.includes(clickedPlant.id) ? `${clickedPlant.name} bookmarked` : `${clickedPlant.name} removed from bookmarks`);
+    }
   }
 
   if (event.target.id === "compareButton") {
@@ -1020,7 +1108,41 @@ document.addEventListener("click", (event) => {
   }
 
   if (event.target.id === "qrButton") {
-    showToast("QR profile preview will connect to backend records later");
+    if (selectedExplorePlant) {
+      const pdfUrl = new URL(selectedExplorePlant.pdf, window.location.href).href;
+      plantQrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(pdfUrl)}`;
+      qrPanel.hidden = false;
+      showToast("QR share code ready");
+    }
+  }
+
+  if (event.target.id === "removeQrButton") {
+    qrPanel.hidden = true;
+    plantQrImage.removeAttribute("src");
+  }
+
+  if (event.target.id === "downloadPlantPdf" && selectedExplorePlant) {
+    const link = document.createElement("a");
+    link.href = encodeURI(selectedExplorePlant.pdf);
+    link.download = `${selectedExplorePlant.name} guide.pdf`;
+    link.click();
+    showToast(`${selectedExplorePlant.name} PDF download started`);
+  }
+
+  if (event.target.id === "bookmarkPlant" && selectedExplorePlant) {
+    const cardButton = document.querySelector(`.favourite[data-plant-id="${selectedExplorePlant.id}"]`);
+    cardButton?.click();
+  }
+
+  if (event.target.id === "sharePlant" && selectedExplorePlant) {
+    const pdfUrl = new URL(selectedExplorePlant.pdf, window.location.href).href;
+    if (navigator.share) {
+      navigator.share({ title: `${selectedExplorePlant.name} plant guide`, text: "EPICS educational plant guide", url: pdfUrl }).catch(() => {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(pdfUrl).then(() => showToast("Plant guide link copied"));
+    } else {
+      showToast("Plant guide link ready to copy from the address bar");
+    }
   }
 
   if (event.target.id === "textSizeButton") {
@@ -1053,9 +1175,12 @@ document.addEventListener("click", (event) => {
     paintCurrentSlide();
   }
 
-  if (event.target.matches(".quick-view") || event.target.id === "quickViewButton") {
-    showPage("explore");
-    setTimeout(() => document.querySelector("#plant-detail").scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+  if (event.target.matches(".quick-view")) {
+    showPlantDetails(clickedPlant, true);
+  }
+
+  if (event.target.id === "quickViewButton") {
+    showPlantDetails(selectedExplorePlant, true);
   }
 
   if (event.target.matches("[data-view]")) {

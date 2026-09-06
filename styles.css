@@ -722,6 +722,8 @@ label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }
   background: rgba(10, 35, 24, 0.78);
   backdrop-filter: blur(12px);
   color: #d8efe0;
+  animation: plantCardIn 460ms cubic-bezier(.2,.75,.25,1) both;
+  animation-delay: calc(var(--card-index, 0) * 55ms);
   transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
 .plant-card:hover {
@@ -748,18 +750,24 @@ label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }
 .card-actions button { flex: 1; }
 .list .plant-card { display: grid; grid-template-columns: 180px 1fr; }
 .list .plant-card img { height: 100%; aspect-ratio: auto; }
+.plant-empty { grid-column: 1 / -1; padding: 34px; border: 1px dashed rgba(80, 160, 110, .42); border-radius: var(--radius); color: #d8efe0; text-align: center; background: rgba(12, 38, 26, .56); }
 
 .plant-detail-card { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 20px; }
 .main-plant-image { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: var(--radius); }
 .thumbs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
 .thumbs img { width: 100%; aspect-ratio: 1.3; object-fit: cover; border-radius: var(--radius); }
 .detail-copy { align-self: center; }
+.detail-copy > * { animation: detailContentIn 360ms cubic-bezier(.2,.8,.2,1) both; }
 .detail-copy h2 { font-size: clamp(2rem, 5vw, 4rem); margin: 12px 0 0; }
 .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 18px 0; }
 .info-grid span { padding: 14px; border-radius: var(--radius); background: rgba(20, 55, 38, 0.5); color: rgba(200, 230, 210, 0.8); border: 1px solid rgba(80, 160, 110, 0.18); }
 .info-grid strong { display: block; color: #e8f5ec; margin-bottom: 4px; }
 .care-note, .disclaimer { border-left: 4px solid var(--accent); padding: 12px 14px; background: rgba(214, 169, 79, 0.14); border-radius: var(--radius); color: var(--muted); }
 .detail-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.qr-panel { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding: 12px; border: 1px solid rgba(80, 160, 110, .24); border-radius: var(--radius); background: rgba(12, 38, 26, .58); animation: detailContentIn 360ms cubic-bezier(.2,.8,.2,1) both; }
+.qr-panel[hidden] { display: none; }
+.qr-panel img { width: 112px; height: 112px; padding: 5px; background: white; border-radius: 4px; }
+.qr-panel p { margin: 5px 0 10px; color: var(--muted); }
 
 .category-band { background: rgba(255,255,255,.08); }
 .category-grid, .dashboard-grid, .analytics-grid, .support-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
@@ -902,7 +910,7 @@ label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }
 .symptom-result-card .primary-button { margin-top: 3px; }
 .symptom-empty { grid-column: 1 / -1; padding: 28px; border: 1px dashed rgba(80, 160, 110, .45); border-radius: var(--radius); color: #d8efe0; background: rgba(12, 38, 26, .56); text-align: center; }
 
-.plant-guide-modal { width: min(1120px, 95vw); max-width: 95vw; max-height: 92vh; padding: 0; border: 0; border-radius: calc(var(--radius) + 4px); background: transparent; color: #d8efe0; }
+.plant-guide-modal { width: min(1240px, 96vw); max-width: 96vw; max-height: 96vh; padding: 0; border: 0; border-radius: calc(var(--radius) + 4px); background: transparent; color: #d8efe0; }
 .plant-guide-modal::backdrop { background: rgba(4, 17, 10, .76); animation: guideOverlayIn 250ms ease-out both; }
 .guide-modal-shell { display: grid; gap: 14px; padding: clamp(14px, 2.2vw, 24px); border: 1px solid rgba(80, 160, 110, .32); border-radius: calc(var(--radius) + 4px); background: #102b1c; box-shadow: 0 28px 90px rgba(0,0,0,.48); animation: guideModalIn 300ms cubic-bezier(.2,.8,.2,1) both; }
 .plant-guide-modal.is-closing::backdrop { animation: guideOverlayOut 220ms ease-in both; }
@@ -910,10 +918,10 @@ label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }
 .guide-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .guide-modal-header h2 { margin: 5px 0 0; color: #f0faf3; font-size: clamp(1.25rem, 3vw, 1.8rem); }
 .guide-close { display: inline-grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; color: white; background: rgba(255,255,255,.08); font-size: 1.8rem; line-height: 1; cursor: pointer; }
-.guide-viewer { position: relative; display: grid; min-height: min(62vh, 640px); max-height: 72vh; overflow: hidden; isolation: isolate; border-radius: var(--radius); background: #07150d; }
+.guide-viewer { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; min-height: min(76vh, 780px); max-height: 82vh; overflow: hidden; isolation: isolate; border-radius: var(--radius); background: #07150d; }
 .guide-viewer::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 42%, rgba(93, 207, 147, .16), transparent 48%), linear-gradient(110deg, transparent 32%, rgba(255,255,255,.08) 50%, transparent 68%); background-size: 100% 100%, 260px 100%; background-repeat: no-repeat; transition: opacity 220ms ease; }
 .guide-viewer::after { content: ""; position: absolute; inset: 10%; z-index: 0; pointer-events: none; border: 1px solid rgba(140, 240, 191, .16); border-radius: calc(var(--radius) - 2px); opacity: 0; transform: scale(.96); }
-.guide-viewer iframe { width: 100%; height: 100%; min-height: min(62vh, 640px); border: 0; opacity: 0; transform: scale(.985) translateX(-8px); transition: opacity 240ms ease, transform 280ms cubic-bezier(.2,.8,.2,1), filter 240ms ease; }
+.guide-viewer iframe { width: 100%; height: 100%; min-height: min(76vh, 780px); border: 0; opacity: 0; transform: scale(.985) translateX(-8px); transition: opacity 240ms ease, transform 280ms cubic-bezier(.2,.8,.2,1), filter 240ms ease; }
 .guide-viewer.is-ready iframe { opacity: 1; transform: scale(1) translateX(0); filter: brightness(1); }
 .guide-viewer.is-loading::before { opacity: 1; animation: guideSheen 700ms ease-out both; }
 .guide-viewer.is-loading::after { animation: guideFrameReveal 520ms cubic-bezier(.2,.8,.2,1) 80ms both; }
@@ -932,6 +940,8 @@ label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }
 .guide-modal-shell > *:nth-child(2) { animation-delay: 70ms; }
 .guide-modal-shell > *:nth-child(3) { animation-delay: 130ms; }
 @keyframes symptomCardIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes plantCardIn { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes detailContentIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes guideOverlayIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes guideOverlayOut { from { opacity: 1; } to { opacity: 0; } }
 @keyframes guideModalIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
@@ -1292,6 +1302,9 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
     animation: none;
   }
   .symptom-result-card,
+  .plant-card,
+  .detail-copy > *,
+  .qr-panel,
   .plant-guide-modal::backdrop,
   .guide-modal-shell,
   .guide-modal-shell > *,
@@ -1327,7 +1340,7 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
   .deck-media { min-height: 300px; }
   .plant-guide-modal { width: 95vw; max-height: 95vh; }
   .guide-modal-shell { gap: 10px; padding: 14px; }
-  .guide-viewer, .guide-viewer iframe { min-height: min(68vh, 580px); max-height: 72vh; }
+  .guide-viewer, .guide-viewer iframe { min-height: min(74vh, 680px); max-height: 80vh; }
   .guide-navigation { gap: 9px; }
   .guide-navigation button { min-height: 44px; }
 }
