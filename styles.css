@@ -147,14 +147,13 @@ button, select {
 }
 .splash-mark { width: 74px; height: 74px; font-size: 2rem; animation: breathe 1.8s ease-in-out infinite; }
 .brand-logo {
-  width: 50px;
-  height: 50px;
-  flex: 0 0 50px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 1.5px solid rgba(255,255,255,0.5);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1);
-  background: #fff;
+  width: min(30vw, 300px);
+  height: 64px;
+  flex: 0 1 min(30vw, 300px);
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 3px 7px rgba(0, 0, 0, .38));
+  animation: logoFloat 6s ease-in-out infinite;
 }
 .splash p { margin: 0; font-size: clamp(2rem, 5vw, 4rem); font-weight: 800; }
 .splash span { color: rgba(255, 255, 255, 0.82); }
@@ -274,14 +273,17 @@ body.dark .topbar { background: linear-gradient(175deg, #071a12 0%, #0e2b1e 45%,
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
 }
 .brand-logo {
-  width: 64px;
+  width: min(30vw, 300px);
   height: 64px;
-  flex: 0 0 64px;
-  object-fit: cover;
-  border-radius: 14px;
-  border: 1.5px solid rgba(255,255,255,0.5);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.1);
-  background: #fff;
+  flex: 0 1 min(30vw, 300px);
+  object-fit: contain;
+  object-position: left center;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  filter: drop-shadow(0 3px 7px rgba(0, 0, 0, .38));
+  animation: logoFloat 6s ease-in-out infinite;
 }
 .topbar .brand {
   display: inline-flex;
@@ -291,6 +293,8 @@ body.dark .topbar { background: linear-gradient(175deg, #071a12 0%, #0e2b1e 45%,
   flex-shrink: 1;
   min-width: 0;
 }
+.topbar .brand-wide { min-width: 190px; }
+.topbar .brand-wide:hover .brand-logo { filter: drop-shadow(0 4px 12px rgba(140, 240, 191, .38)); }
 .topbar .brand strong {
   color: #e8f5ec;
   font-size: 1.05rem;
@@ -951,6 +955,7 @@ label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }
 @keyframes guidePageInPrevious { from { opacity: .18; transform: translateX(-18px) scale(.988); } to { opacity: 1; transform: translateX(0) scale(1); } }
 @keyframes guideSheen { from { background-position: -260px 0, 0 0; } to { background-position: 620px 0, 0 0; } }
 @keyframes guideSpin { to { transform: rotate(360deg); } }
+@keyframes logoFloat { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-1px) scale(1.012); } }
 @keyframes guideContentIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes guideFrameReveal { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
 .presentation-shell {
@@ -1311,6 +1316,7 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
   .guide-viewer.is-loading::before,
   .guide-viewer.is-loading::after,
   .guide-spinner { animation: none; }
+  .brand-logo { animation: none; }
   .guide-viewer iframe { transition: none; }
 }
 
