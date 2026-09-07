@@ -147,9 +147,9 @@ button, select {
 }
 .splash-mark { width: 74px; height: 74px; font-size: 2rem; animation: breathe 1.8s ease-in-out infinite; }
 .brand-logo {
-  width: min(30vw, 300px);
-  height: 64px;
-  flex: 0 1 min(30vw, 300px);
+  width: 320px;
+  height: 70px;
+  flex: 0 0 320px;
   object-fit: contain;
   object-position: left center;
   filter: drop-shadow(0 3px 7px rgba(0, 0, 0, .38));
@@ -286,6 +286,7 @@ body.dark .topbar { background: linear-gradient(175deg, #071a12 0%, #0e2b1e 45%,
   animation: logoFloat 6s ease-in-out infinite;
 }
 .topbar .brand {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -293,7 +294,31 @@ body.dark .topbar { background: linear-gradient(175deg, #071a12 0%, #0e2b1e 45%,
   flex-shrink: 1;
   min-width: 0;
 }
-.topbar .brand-wide { min-width: 190px; }
+.topbar .brand-wide { min-width: 210px; flex-shrink: 0; }
+.topbar .brand-wide::before {
+  content: "";
+  position: absolute;
+  inset: 5px 0;
+  pointer-events: none;
+  opacity: .65;
+  background: linear-gradient(112deg, transparent 24%, rgba(255,255,255,.08) 42%, rgba(255,255,255,.72) 50%, rgba(140,240,191,.14) 56%, transparent 76%);
+  background-size: 220% 100%;
+  mix-blend-mode: screen;
+  animation: logoSheen 7s ease-in-out infinite;
+}
+.topbar .brand-wide::after {
+  content: "";
+  position: absolute;
+  inset: 5px 4px;
+  pointer-events: none;
+  opacity: .78;
+  background:
+    radial-gradient(circle at 12% 30%, rgba(255,255,220,.95) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 39% 72%, rgba(255,220,130,.9) 0 1.2px, transparent 2.2px),
+    radial-gradient(circle at 66% 22%, rgba(190,255,220,.95) 0 1.4px, transparent 2.4px),
+    radial-gradient(circle at 88% 62%, rgba(255,255,255,.9) 0 1.3px, transparent 2.3px);
+  animation: logoGlitter 3.8s ease-in-out infinite;
+}
 .topbar .brand-wide:hover .brand-logo { filter: drop-shadow(0 4px 12px rgba(140, 240, 191, .38)); }
 .topbar .brand strong {
   color: #e8f5ec;
@@ -956,6 +981,8 @@ label { display: grid; gap: 8px; color: var(--muted); font-weight: 700; }
 @keyframes guideSheen { from { background-position: -260px 0, 0 0; } to { background-position: 620px 0, 0 0; } }
 @keyframes guideSpin { to { transform: rotate(360deg); } }
 @keyframes logoFloat { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-1px) scale(1.012); } }
+@keyframes logoSheen { 0%, 24% { background-position: 130% 0; opacity: 0; } 42%, 58% { opacity: .65; } 76%, 100% { background-position: -30% 0; opacity: 0; } }
+@keyframes logoGlitter { 0%, 100% { opacity: .28; transform: scale(.98); } 45% { opacity: .85; transform: scale(1); } 72% { opacity: .4; } }
 @keyframes guideContentIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes guideFrameReveal { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
 .presentation-shell {
@@ -1317,6 +1344,8 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
   .guide-viewer.is-loading::after,
   .guide-spinner { animation: none; }
   .brand-logo { animation: none; }
+  .topbar .brand-wide::before,
+  .topbar .brand-wide::after { animation: none; }
   .guide-viewer iframe { transition: none; }
 }
 
@@ -1332,6 +1361,7 @@ footer nav { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; col
 @media (max-width: 680px) {
   section { padding-inline: 14px; }
   .brand small { display: none; }
+  .brand-logo { width: min(70vw, 280px); height: 58px; flex-basis: min(70vw, 280px); }
   .hero h1 { font-size: 2.45rem; }
   .hero-panel { transform: none; }
   .metric-strip, .journey-strip, .plant-grid, .category-grid, .dashboard-grid, .analytics-grid, .database-map, .support-grid, .info-grid, .symptom-results { grid-template-columns: 1fr; }
