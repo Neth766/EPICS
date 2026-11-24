@@ -72,6 +72,10 @@ const detailPlantLocalName = document.querySelector("#detailPlantLocalName");
 const detailPlantFamily = document.querySelector("#detailPlantFamily");
 const detailPlantRegion = document.querySelector("#detailPlantRegion");
 const detailPlantUses = document.querySelector("#detailPlantUses");
+const detailEvidenceLevel = document.querySelector("#detailEvidenceLevel");
+const detailTraditionalUse = document.querySelector("#detailTraditionalUse");
+const detailPreparation = document.querySelector("#detailPreparation");
+const detailSafety = document.querySelector("#detailSafety");
 const qrPanel = document.querySelector("#qrPanel");
 const plantQrImage = document.querySelector("#plantQrImage");
 
@@ -856,6 +860,7 @@ const symptomGuides = {
 
 function renderPlants(items = plants) {
   if (!plantGrid) return;
+  plantGrid.setAttribute("aria-busy", "true");
   plantGrid.innerHTML = items.length ? items.map((plant, index) => `
     <article class="plant-card" style="--card-index:${index}" data-plant-id="${plant.id}">
       <img loading="lazy" src="${plant.image || imageFallback}" alt="${plant.name} plant">
@@ -873,6 +878,7 @@ function renderPlants(items = plants) {
     </article>
   `).join("") : `<div class="plant-empty">No plant records match these filters. Try a broader search.</div>`;
   attachImageFallbacks(plantGrid);
+  requestAnimationFrame(() => plantGrid.setAttribute("aria-busy", "false"));
 }
 
 function isPlantBookmarked(plantId) {
@@ -893,6 +899,11 @@ function setDetailPlant(plant) {
   detailPlantFamily.textContent = plant.family;
   detailPlantRegion.textContent = plant.region;
   detailPlantUses.textContent = plant.uses;
+  const knowledge = plantMappings?.find((entry) => entry.id === plant.id);
+  detailEvidenceLevel.textContent = knowledge?.evidenceLevel || "Educational record";
+  detailTraditionalUse.textContent = knowledge?.traditionalUses?.[0] || "Traditional-use context is being prepared for this educational record.";
+  detailPreparation.textContent = knowledge?.preparationMethods?.join(" · ") || "See guide";
+  detailSafety.textContent = knowledge?.safetyInformation?.[0] || "Educational information only";
   qrPanel.hidden = true;
   plantQrImage.removeAttribute("src");
   document.querySelector("#bookmarkPlant").textContent = isPlantBookmarked(plant.id) ? "Bookmarked" : "Bookmark";
@@ -942,6 +953,19 @@ function showToast(message) {
   toast.textContent = message;
   toast.classList.add("show");
   setTimeout(() => toast.classList.remove("show"), 1800);
+}
+
+function openExploreWithTerm(term) {
+  const normalizedTerm = term.toLowerCase().trim();
+  if (exploreSearch) exploreSearch.value = normalizedTerm;
+  if (globalSearch) globalSearch.value = normalizedTerm;
+  location.hash = "explore";
+  document.querySelectorAll("[data-explore-term]").forEach((control) => {
+    const active = control.dataset.exploreTerm === normalizedTerm;
+    control.setAttribute("aria-pressed", String(active));
+  });
+  applyExploreFilters();
+  setTimeout(() => document.querySelector("#explore")?.scrollIntoView({ behavior: document.body.classList.contains("reduce-motion") ? "auto" : "smooth", block: "start" }), 0);
 }
 
 function attachImageFallbacks(root = document) {
@@ -1051,7 +1075,6 @@ if (regionFilter) {
   [...new Set(plants.map((plant) => plant.region).sort())].forEach((region) => regionFilter.insertAdjacentHTML("beforeend", `<option>${region}</option>`));
 }
 renderPlants();
-setDetailPlant(selectedExplorePlant);
 
 const searchShell = document.querySelector(".search-shell");
 
@@ -1089,6 +1112,9 @@ document.addEventListener("click", (event) => {
     document.querySelectorAll("dialog[open]").forEach((dialog) => dialog.close());
     document.querySelector(`#${modalId}`).showModal();
   }
+
+  const exploreControl = event.target.closest("[data-explore-term]");
+  if (exploreControl) openExploreWithTerm(exploreControl.dataset.exploreTerm || "");
 
   if (event.target.matches(".favourite")) {
     if (clickedPlant) {
@@ -1176,7 +1202,7 @@ document.addEventListener("click", (event) => {
   }
 
   if (event.target.matches(".quick-view")) {
-    showPlantDetails(clickedPlant, true);
+    showPlantDetails(clickedPlant, false);
   }
 
   if (event.target.id === "quickViewButton") {
@@ -1344,6 +1370,7 @@ const guideViewer = document.querySelector("#guideViewer");
 const guideFrame = document.querySelector("#plantGuideFrame");
 const guideLoading = document.querySelector("#guideLoading");
 const guideError = document.querySelector("#guideError");
+const guideTitle = document.querySelector("#guideTitle");
 const pdfPageCounter = document.querySelector("#pdfPageCounter");
 let activeGuidePlant = null;
 let activePdfPage = 1;
@@ -1374,6 +1401,7 @@ function renderPlantResults(plantsForSymptoms, selected) {
     symptomResults.innerHTML = "";
     return;
   }
+  symptomResults.setAttribute("aria-busy", "true");
   symptomResult.textContent = `${plantsForSymptoms.length ? "Showing traditional plant references ranked by matching symptoms." : "No guide matches these symptoms yet. Try another selected symptom."} Profile details are not used for matching.`;
   symptomResults.innerHTML = plantsForSymptoms.length ? plantsForSymptoms.map((plant, index) => {
     const matches = selected.filter((symptom) => plant.symptoms.includes(symptom));
@@ -1390,6 +1418,7 @@ function renderPlantResults(plantsForSymptoms, selected) {
     </article>`;
   }).join("") : `<div class="symptom-empty">No traditional plant guide is currently mapped to this selection.</div>`;
   attachImageFallbacks(symptomResults);
+  requestAnimationFrame(() => symptomResults.setAttribute("aria-busy", "false"));
 }
 
 function updateSymptomResults() {
@@ -1417,7 +1446,7 @@ async function loadPdfPage(direction = "next") {
     // Verify the local static asset first. The iframe itself has unreliable PDF
     // load/error events, so it never controls the application's error state.
     if (location.protocol !== "file:") {
-      const response = await fetch(guideUrl, { method: "HEAD", cache: "no-store" });
+      const response = await fetch(guideUrl, { method: "GET", headers: { Range: "bytes=0-4" }, cache: "no-store" });
       if (!response.ok) throw new Error(`Guide request returned ${response.status}`);
     }
     if (requestId !== guideRequestId) return;
@@ -1445,6 +1474,7 @@ function openPlantGuide(plant) {
   if (!plant?.pdf || !plantGuideModal) return;
   activeGuidePlant = plant;
   activePdfPage = 1;
+  guideTitle.textContent = `${plant.name} guide`;
   clearTimeout(guideCloseTimer);
   plantGuideModal.classList.remove("is-closing");
   if (!plantGuideModal.open) plantGuideModal.showModal();
@@ -1503,6 +1533,12 @@ guideViewer.addEventListener("touchend", (event) => {
 }, { passive: true });
 plantGuideModal.addEventListener("cancel", (event) => { event.preventDefault(); closePlantGuide(); });
 plantGuideModal.addEventListener("click", (event) => { if (event.target === plantGuideModal) closePlantGuide(); });
+document.querySelectorAll("form[data-static-form]").forEach((form) => form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const action = form.dataset.staticForm;
+  form.closest("dialog")?.close();
+  showToast(`${action.charAt(0).toUpperCase() + action.slice(1)} needs the connected backend before it can be completed.`);
+}));
 window.addEventListener("keydown", (event) => {
   if (!plantGuideModal?.open) return;
   if (event.key === "Escape") { event.preventDefault(); closePlantGuide(); }
@@ -1510,6 +1546,7 @@ window.addEventListener("keydown", (event) => {
   if (event.key === "ArrowRight") { event.preventDefault(); changePdfPage(1); }
 });
 updateSymptomResults();
+setDetailPlant(selectedExplorePlant);
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {

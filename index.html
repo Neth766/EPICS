@@ -339,11 +339,11 @@
             <input id="globalSearch" type="search" placeholder="Try tulsi, cough, Ocimum tenuiflorum...">
           </div>
           <div class="smart-assist" id="smartAssist">Smart suggestions will appear as you search.</div>
-          <div class="quick-filters">
-            <button>Respiratory</button>
-            <button>Digestive</button>
-            <button>Skin care</button>
-            <button>Immunity</button>
+          <div class="quick-filters" aria-label="Quick plant categories">
+            <button type="button" data-explore-term="respiratory" aria-pressed="false">Respiratory</button>
+            <button type="button" data-explore-term="digestive" aria-pressed="false">Digestive</button>
+            <button type="button" data-explore-term="fever" aria-pressed="false">Fever & seasonal</button>
+            <button type="button" data-explore-term="wellness" aria-pressed="false">Wellness</button>
           </div>
         </div>
         <div class="featured-card">
@@ -450,6 +450,17 @@
             <span><strong>PDF guide</strong><span id="detailPdfStatus">Available</span></span>
           </div>
           <div class="care-note" id="detailPlantUses">Traditional plant knowledge for community education and conservation.</div>
+          <section class="knowledge-record" aria-labelledby="knowledgeRecordTitle">
+            <div class="knowledge-record__heading">
+              <div><span class="section-kicker">Knowledge record</span><h3 id="knowledgeRecordTitle">How to read this profile</h3></div>
+              <span class="evidence-chip" id="detailEvidenceLevel">Traditional knowledge</span>
+            </div>
+            <p id="detailTraditionalUse">This profile summarises traditional-use context for educational exploration.</p>
+            <div class="knowledge-record__grid">
+              <div><span>Preparation context</span><strong id="detailPreparation">Educational guide</strong></div>
+              <div><span>Safety note</span><strong id="detailSafety">Educational information only</strong></div>
+            </div>
+          </section>
           <div class="detail-actions">
             <button class="primary-button" id="downloadPlantPdf" type="button">Download PDF</button>
             <button class="secondary-button" id="bookmarkPlant" type="button">Bookmark</button>
@@ -472,12 +483,12 @@
         </div>
       </div>
       <div class="category-grid">
-        <article><span>◌</span><strong>Respiratory</strong><p>Traditionally referenced plants for breathing and seasonal comfort.</p></article>
-        <article><span>◍</span><strong>Digestive</strong><p>Herbs commonly discussed for digestion and appetite support.</p></article>
-        <article><span>◎</span><strong>Skin</strong><p>External preparation knowledge with clear plant-part documentation.</p></article>
-        <article><span>✦</span><strong>Immunity</strong><p>Community knowledge around general wellness rituals.</p></article>
-        <article><span>◇</span><strong>Women's Health</strong><p>Carefully labeled traditional references with disclaimers.</p></article>
-        <article><span>☘</span><strong>General Wellness</strong><p>Everyday plants, preparation, and conservation notes.</p></article>
+        <button type="button" data-explore-term="respiratory"><span>◌</span><strong>Respiratory</strong><p>Traditionally referenced plants for breathing and seasonal comfort.</p></button>
+        <button type="button" data-explore-term="digestive"><span>◍</span><strong>Digestive</strong><p>Herbs commonly discussed for digestion and appetite support.</p></button>
+        <button type="button" data-explore-term="fever"><span>◎</span><strong>Fever & seasonal comfort</strong><p>Plants documented in educational references for fever and seasonal-discomfort topics.</p></button>
+        <button type="button" data-explore-term="headache"><span>✦</span><strong>Headache & body discomfort</strong><p>Educational entries traditionally associated with these symptom topics.</p></button>
+        <button type="button" data-explore-term="wellness"><span>◇</span><strong>General wellness</strong><p>Community knowledge around broad wellness and conservation learning.</p></button>
+        <button type="button" data-explore-term=""><span>☘</span><strong>All plant profiles</strong><p>Browse the complete local collection and filter by family, region, or name.</p></button>
       </div>
     </section>
 
@@ -526,16 +537,24 @@
         </aside>
       </div>
       <div class="recommendation" id="symptomResult" role="status">Choose one or more symptoms to see educational plant references.</div>
+      <aside class="evidence-banner" aria-label="Educational use notice">
+        <span aria-hidden="true">◈</span>
+        <div><strong>Educational plant knowledge, not a diagnosis.</strong><p>Results are ranked by documented traditional symptom associations. They do not confirm a condition, establish clinical effectiveness, or replace qualified medical advice.</p></div>
+      </aside>
       <div class="symptom-results" id="symptomResults" aria-live="polite"></div>
     </section>
 
     <dialog class="plant-guide-modal" id="plantGuideModal" aria-label="Plant guide PDF">
       <div class="guide-modal-shell">
+        <div class="guide-modal-header">
+          <div><span class="section-kicker">Educational plant guide</span><h2 id="guideTitle">Plant guide</h2></div>
         <button class="guide-close" id="closePlantGuide" type="button" aria-label="Close plant guide">×</button>
+        </div>
         <div class="guide-viewer" id="guideViewer">
           <div class="guide-loading" id="guideLoading"><span class="guide-spinner" aria-hidden="true"></span><span>Loading guide…</span></div>
           <iframe id="plantGuideFrame" title="Plant guide PDF" loading="lazy"></iframe>
           <div class="guide-error" id="guideError" hidden role="alert">This plant guide could not be loaded. Please try again.</div>
+        </div>
         <div class="guide-navigation">
           <button class="secondary-button" id="previousPdfPage" type="button" aria-label="Previous page">← <span>Previous</span></button>
           <span id="pdfPageCounter" aria-live="polite">1 / 3</span>
@@ -649,11 +668,11 @@
   </footer>
 
   <dialog class="modal" id="loginModal">
-    <form method="dialog">
+    <form method="dialog" data-static-form="sign in">
       <button class="close" aria-label="Close">×</button>
       <h2>Sign in</h2>
-      <label>Email<input type="email" placeholder="you@example.com"></label>
-      <label>Password<input type="password" placeholder="••••••••"></label>
+      <label>Email<input type="email" autocomplete="email" required placeholder="you@example.com"></label>
+      <label>Password<input type="password" autocomplete="current-password" required placeholder="••••••••"></label>
       <div class="form-row"><label class="check"><input type="checkbox"> Remember me</label><a href="#" data-open-modal="forgotModal">Forgot password?</a></div>
       <button class="primary-button full">Sign in</button>
       <button class="secondary-button full" type="button">Continue with Google</button>
@@ -661,38 +680,38 @@
   </dialog>
 
   <dialog class="modal" id="signupModal">
-    <form method="dialog">
+    <form method="dialog" data-static-form="account creation">
       <button class="close" aria-label="Close">×</button>
       <h2>Create account</h2>
-      <label>Name<input type="text" placeholder="Full name"></label>
-      <label>Email<input type="email" placeholder="you@example.com"></label>
-      <label>Password<input type="password" placeholder="Create password"></label>
+      <label>Name<input type="text" autocomplete="name" required placeholder="Full name"></label>
+      <label>Email<input type="email" autocomplete="email" required placeholder="you@example.com"></label>
+      <label>Password<input type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters"></label>
       <label>Role<select><option>Student</option><option>Researcher</option><option>Community contributor</option><option>Admin</option></select></label>
       <label>Language<select><option>English</option><option>Hindi</option><option>Tamil</option></select></label>
-      <label class="check"><input type="checkbox"> I agree to the Terms and Privacy Policy</label>
+      <label class="check"><input type="checkbox" required> I agree to the Terms and Privacy Policy</label>
       <button class="primary-button full">Create account</button>
     </form>
   </dialog>
 
   <dialog class="modal" id="forgotModal">
-    <form method="dialog">
+    <form method="dialog" data-static-form="password reset">
       <button class="close" aria-label="Close">×</button>
       <h2>Reset password</h2>
-      <label>Email<input type="email" placeholder="you@example.com"></label>
-      <label>OTP<input type="text" placeholder="6 digit code"></label>
-      <label>New password<input type="password" placeholder="New password"></label>
+      <label>Email<input type="email" autocomplete="email" required placeholder="you@example.com"></label>
+      <label>OTP<input type="text" inputmode="numeric" pattern="[0-9]{6}" required placeholder="6 digit code"></label>
+      <label>New password<input type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters"></label>
       <button class="primary-button full">Confirm reset</button>
     </form>
   </dialog>
 
   <dialog class="modal" id="contributionModal">
-    <form method="dialog">
+    <form method="dialog" data-static-form="observation submission">
       <button class="close" aria-label="Close">×</button>
       <h2>Submit observation</h2>
-      <label>Plant name<input type="text" placeholder="Common or local name"></label>
-      <label>Location<input type="text" placeholder="Garden, village, or region"></label>
+      <label>Plant name<input type="text" required placeholder="Common or local name"></label>
+      <label>Location<input type="text" required placeholder="Garden, village, or region"></label>
       <label>Observation type<select><option>New plant</option><option>Suggest edit</option><option>Conservation note</option><option>Image upload</option></select></label>
-      <label>Notes<textarea placeholder="Describe what you observed"></textarea></label>
+      <label>Notes<textarea required minlength="20" placeholder="Describe what you observed (at least 20 characters)"></textarea></label>
       <button class="primary-button full">Submit for review</button>
     </form>
   </dialog>
